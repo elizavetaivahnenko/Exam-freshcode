@@ -8,12 +8,10 @@ const config = require(configPath)[env];
 mongoose.connect(
   `mongodb://${config.host}:${config.port}/${config.database}`,
   { useNewUrlParser: true, useUnifiedTopology: true },
-  (err) => {
-    if (err) {
-      process.exit(1);
-    } else {
-      console.log("mongo connect ");
-    }
+  (error) => {
+    error
+      ? console.error("Error connection with mongodb")
+      : console.log("Connection with mondo db is success!!! ");
   }
 );
 mongoose.set("debug", env === "development");

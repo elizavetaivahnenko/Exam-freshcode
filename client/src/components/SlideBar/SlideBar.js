@@ -1,8 +1,8 @@
-import React from 'react';
-import Flickity from 'react-flickity-component';
-import style from './SlideBar.module.sass';
-import carouselConstants from '../../carouselConstants';
-import './flickity.css';
+import React from "react";
+import Flickity from "react-flickity-component";
+import style from "./SlideBar.module.sass";
+import carouselConstants from "../../carouselConstants";
+import "./flickity.css";
 
 const SliderBar = (props) => {
   const options = {
@@ -36,22 +36,25 @@ const SliderBar = (props) => {
             src={props.images[key]}
             alt="slide"
             key={index}
-            className={style['carousel-cell']}
+            className={style["carousel-cell"]}
           />
         ));
       }
       case carouselConstants.EXAMPLE_SLIDER: {
         return Object.keys(props.images).map((key, index) => (
-          <div className={style['example-cell']} key={index}>
+          <div className={style["example-cell"]} key={index}>
             <img src={props.images[key]} alt="slide" />
-            <p>{carouselConstants.EXAMPLE_SLIDER_TEXT[index]}</p>
+            <p>
+              <a href={carouselConstants.EXAMPLE_SLIDER_LINK[index]}>
+                {carouselConstants.EXAMPLE_SLIDER_TEXT[index]}
+              </a>
+            </p>
           </div>
-
         ));
       }
       case carouselConstants.FEEDBACK_SLIDER: {
         return Object.keys(props.images).map((key, index) => (
-          <div className={style['feedback-cell']} key={index}>
+          <div className={style["feedback-cell"]} key={index}>
             <img src={props.images[key]} alt="slide" />
             <p>{carouselConstants.FEEDBACK_SLIDER_TEXT[index].feedback}</p>
             <span>{carouselConstants.FEEDBACK_SLIDER_TEXT[index].name}</span>
@@ -61,14 +64,8 @@ const SliderBar = (props) => {
     }
   };
   return (
-    <Flickity
-      className={getStyleName()}
-      elementType="div"
-      options={options}
-    >
-      {
-                renderSlides()
-            }
+    <Flickity className={getStyleName()} elementType="div" options={options}>
+      {renderSlides()}
     </Flickity>
   );
 };

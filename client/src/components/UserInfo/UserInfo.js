@@ -41,7 +41,7 @@ const UserInfo = (props) => {
               onClick={() => changeEditMode(!isEdit)}
               className={styles.buttonEdit}
             >
-              {isEdit ? "Cancel" : "Edit"}
+              <p>{isEdit ? "Cancel" : "Edit"}</p>
             </div>
           </div>
           <div className={styles.infoContainer_info}>

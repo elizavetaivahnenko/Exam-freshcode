@@ -8,13 +8,28 @@ import {
   clearUserStore,
   headerRequest,
 } from "../../actions/actionCreator";
+import Logo from "../Logo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import classnames from "classnames";
 
 class Header extends React.Component {
+  constructor() {
+    super();
+    this.state = { isClickedBurger: false };
+    this.handleClick = this.handleClick.bind(this);
+  }
   componentDidMount() {
     if (!this.props.data) {
       this.props.getUser();
     }
   }
+
+  handleClick = () => {
+    this.setState((prevState) => ({
+      isClickedBurger: !prevState.isClickedBurger,
+    }));
+  };
 
   logOut = () => {
     localStorage.clear();
@@ -72,7 +87,9 @@ class Header extends React.Component {
                 </Link>
               </li>
               <li>
-                <span onClick={this.logOut}>Logout</span>
+                <Link to="/">
+                  <span onClick={this.logOut}>Logout</span>
+                </Link>
               </li>
             </ul>
           </div>
@@ -124,23 +141,34 @@ class Header extends React.Component {
           </div>
         </div>
         <div className={styles.navContainer}>
-          <Link to="/">
-            <img
-              src={`${CONSTANTS.STATIC_IMAGES_PATH}blue-logo.png`}
-              className={styles.logo}
-              alt="blue_logo"
-            />
-          </Link>
-          <div className={styles.leftNav}>
+          <Logo className={styles.logo} />
+          <FontAwesomeIcon
+            className={styles.burger}
+            icon={this.state.isClickedBurger ? faXmark : faBars}
+            onClick={this.handleClick}
+          />
+          <div
+            className={classnames(styles.leftNav, {
+              [styles.leftNav_active]: this.state.isClickedBurger,
+            })}
+          >
             <div className={styles.nav}>
               <ul>
-                <li>
+                <li
+                  className={classnames({
+                    [styles.navItem]: this.state.isClickedBurger,
+                  })}
+                >
                   <span>NAME IDEAS</span>
                   <img
                     src={`${CONSTANTS.STATIC_IMAGES_PATH}menu-down.png`}
                     alt="menu"
                   />
-                  <ul>
+                  <ul
+                    className={classnames({
+                      [styles.menu]: this.state.isClickedBurger,
+                    })}
+                  >
                     <li>
                       <a href="http://www.google.com">Beauty</a>
                     </li>
@@ -167,13 +195,21 @@ class Header extends React.Component {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li
+                  className={classnames({
+                    [styles.navItem]: this.state.isClickedBurger,
+                  })}
+                >
                   <span>CONTESTS</span>
                   <img
                     src={`${CONSTANTS.STATIC_IMAGES_PATH}menu-down.png`}
                     alt="menu"
                   />
-                  <ul>
+                  <ul
+                    className={classnames({
+                      [styles.menu]: this.state.isClickedBurger,
+                    })}
+                  >
                     <li>
                       <a href="http://www.google.com">HOW IT WORKS</a>
                     </li>
@@ -197,13 +233,21 @@ class Header extends React.Component {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li
+                  className={classnames({
+                    [styles.navItem]: this.state.isClickedBurger,
+                  })}
+                >
                   <span>Our Work</span>
                   <img
                     src={`${CONSTANTS.STATIC_IMAGES_PATH}menu-down.png`}
                     alt="menu"
                   />
-                  <ul>
+                  <ul
+                    className={classnames({
+                      [styles.menu]: this.state.isClickedBurger,
+                    })}
+                  >
                     <li>
                       <a href="http://www.google.com">NAMES</a>
                     </li>
@@ -218,13 +262,21 @@ class Header extends React.Component {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li
+                  className={classnames({
+                    [styles.navItem]: this.state.isClickedBurger,
+                  })}
+                >
                   <span>Names For Sale</span>
                   <img
                     src={`${CONSTANTS.STATIC_IMAGES_PATH}menu-down.png`}
                     alt="menu"
                   />
-                  <ul>
+                  <ul
+                    className={classnames({
+                      [styles.menu]: this.state.isClickedBurger,
+                    })}
+                  >
                     <li>
                       <a href="http://www.google.com">POPULAR NAMES</a>
                     </li>
@@ -245,13 +297,21 @@ class Header extends React.Component {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li
+                  className={classnames({
+                    [styles.navItem]: this.state.isClickedBurger,
+                  })}
+                >
                   <span>Blog</span>
                   <img
                     src={`${CONSTANTS.STATIC_IMAGES_PATH}menu-down.png`}
                     alt="menu"
                   />
-                  <ul>
+                  <ul
+                    className={classnames({
+                      [styles.menu]: this.state.isClickedBurger,
+                    })}
+                  >
                     <li>
                       <a href="http://www.google.com">ULTIMATE NAMING GUIDE</a>
                     </li>

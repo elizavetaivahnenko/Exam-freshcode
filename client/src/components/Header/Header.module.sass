@@ -12,15 +12,22 @@
     justify-content: space-around
     align-items: center
     border-bottom: 1px solid #ebebeb
+    padding: 0 15px
     @media(max-width: 920px)
       justify-content: center
-    @media(max-width: 700px)
-      justify-content: flex-start
+    @media(max-width: 768px)
+      justify-content: space-between
 
     .logo
       align-self: flex-end
       @media(max-width: 920px)
         display: none
+
+    .burger
+      display: none
+      height: 20px
+      @media(max-width: 750px)
+        display: block
 
     .startContestBtn
       text-align: center
@@ -32,6 +39,11 @@
       font-size: 14px
       font-weight: 400
       margin-bottom: 10px
+      @media(max-width:750px)
+        z-index: 100
+        background-color: #28d2d0
+        color: white
+        border: 2px solid white
 
       &:hover
         color: white
@@ -40,8 +52,38 @@
     .leftNav
       display: flex
       @media(max-width: 750px)
-        align-items: center
-        flex-direction: column
+        display: none
+
+      @media(max-width:750px)
+        &_active
+          position: absolute
+          display: flex
+          flex-direction: column
+          right: 0px
+          top: 127px
+          .nav
+            ul
+              display: flex
+              flex-direction: column
+              border: 1px solid #eee
+              z-index: 100
+              background-color: white
+              width: 160px
+              justify-content: flex-start
+
+              .navItem
+                position: relative
+
+                &:hover
+                  .menu
+                    position: absolute
+                    display: block
+                    border: 1px solid #eee
+                    z-index: 2
+                    background-color: white
+                    top: 0px
+                    width: 200px
+                    left: -200px
 
       .nav
         display: flex
@@ -74,12 +116,13 @@
             &:hover
               span
                 color: #f27e51
+                cursor: pointer
 
               ul
                 display: block
                 position: absolute
                 border: 1px solid #eee
-                z-index: 1000
+                z-index: 2
                 top: 130px
                 background-color: white
                 @media(max-width: 700px)
@@ -104,6 +147,7 @@
                 padding: 10px 15px
                 display: flex
                 justify-content: flex-start
+                text-transform: uppercase
 
                 &:hover
                   background: #f9fafb
@@ -156,6 +200,7 @@
         padding: 10px 15px
         border-right: 1px solid #ebebeb
         position: relative
+        cursor: pointer
 
         &:hover
           ul
@@ -184,7 +229,6 @@
               padding: 5px 15px
               color: #333
               font-size: 16px
-              cursor: pointer
 
         img
           width: 20px
