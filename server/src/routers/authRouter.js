@@ -1,7 +1,7 @@
 // /api/auth
 const { Router } = require("express");
 const authRouter = Router();
-const authController = require("./../controllers/authController/js");
+const authController = require("../controllers/authController");
 const hashPass = require("../middlewares/hashPassMiddle");
 const validators = require("../middlewares/validators");
 

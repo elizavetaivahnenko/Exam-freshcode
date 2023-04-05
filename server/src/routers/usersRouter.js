@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const basicMiddlewares = require("../middlewares/basicMiddlewares");
 const contestController = require("../controllers/contestController");
+const userController = require("../controllers/userController");
 const checkToken = require("../middlewares/checkToken");
 const upload = require("../utils/fileUpload");
 

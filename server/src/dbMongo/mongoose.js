@@ -11,7 +11,7 @@ mongoose.connect(
   (error) => {
     error
       ? console.error("Error connection with mongodb")
-      : console.log("Connection with mondo db is success!!! ");
+      : console.log("Connection with mongo db is success!!! ");
   }
 );
 mongoose.set("debug", env === "development");
