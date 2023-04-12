@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "babel-node": "babel-node",
-    "start": "nodemon ./src/server.js",
-    "test": "jest",
-    "build": "babel src -d dist"
+    "start": "nodemon ./server.js",
+    "server": "./src/server.js",
+    "test": "jest"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -24,13 +23,10 @@
     "sequelize": "^6.6.2",
     "socket.io": "^4.1.1",
     "uuid": "^8.3.2",
+    "winston": "^3.8.2",
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "^7.14.2",
-    "@babel/node": "^7.14.2",
-    "@babel/preset-env": "^7.14.2",
     "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.2",
