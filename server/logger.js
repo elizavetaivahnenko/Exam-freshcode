@@ -1,19 +1,19 @@
-const winston = require("winston");
+const { createLogger, format, transports } = require("winston");
+const { combine, timestamp, printf } = format;
 
-const logger = winston.createLogger({
-  level: "error",
-  format: winston.format.json(),
-  transports: [new winston.transports.File({ filename: "error.log" })],
+const myFormat = printf(({ code, message, stack, timestamp }) => {
+  return `{"message": "${message.replace(
+    /(")/gm,
+    "'"
+  )}", "time": "${timestamp}", "code": "${code}", "stackTrace": "${stack.replace(
+    /(")/gm,
+    "'"
+  )}"},`.replace(/(\r\n|\n|\r)/gm, "");
 });
 
-function logError({ message, code, stack, timestamp }) {
-  logger.log({
-    level: "error",
-    message: message,
-    time: timestamp || new Date(),
-    code: code,
-    stackTrace: stack,
-  });
-}
+const logger = createLogger({
+  format: combine(timestamp(), myFormat),
+  transports: [new transports.File({ filename: "error.log" })],
+});
 
-module.exports = logError;
+module.exports = logger;
