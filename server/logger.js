@@ -5,15 +5,14 @@ const myFormat = printf(({ code, message, stack, timestamp }) => {
   return `{"message": "${message.replace(
     /(")/gm,
     "'"
-  )}", "time": "${timestamp}", "code": "${code}", "stackTrace": "${stack.replace(
-    /(")/gm,
-    "'"
-  )}"},`.replace(/(\r\n|\n|\r)/gm, "");
+  )}", "time": "${timestamp}", "code": "${code}", "stackTrace": "${stack
+    .replace(/(")/gm, "'")
+    .replace(/\\/gm, "/")}"},`.replace(/(\r\n|\n|\r)/gm, "");
 });
 
 const logger = createLogger({
   format: combine(timestamp(), myFormat),
-  transports: [new transports.File({ filename: "error.log" })],
+  transports: [new transports.File({ filename: "error.log", level: "error" })],
 });
 
 module.exports = logger;

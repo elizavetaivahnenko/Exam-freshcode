@@ -1,2 +1,0 @@
-
-{"message": "user with this data didn`t exist", "time": "2023-04-14T15:33:35.976Z", "code": "404", "stackTrace": "UserNotFoundError: user with this data didn`t exist    at Object.module.exports.findUser (D:\Desktop\Exam freshcode\server\controllers\queries\userQueries.js:18:11)    at processTicksAndRejections (node:internal/process/task_queues:96:5)    at async module.exports.login (D:\Desktop\Exam freshcode\server\controllers\authController.js:8:23)"},
