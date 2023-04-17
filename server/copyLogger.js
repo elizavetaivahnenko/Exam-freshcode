@@ -8,7 +8,7 @@ function handlerProcessLogs() {
   if (fs.existsSync(__dirname + "/error.log")) {
     const logData = fs.readFileSync(__dirname + "/error.log", "utf-8");
     clearErrorFile();
-    const parsedLogData = JSON.parse([`${logData.replace(/,\s*$/, "")}`]);
+    const parsedLogData = JSON.parse(`[${logData.replace(/,\s*$/, "")}]`);
     const newErrorLog = reformatErrorLogs(parsedLogData);
     saveErrorLogToFile(newErrorLog);
   }
