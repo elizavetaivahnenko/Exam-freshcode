@@ -1,0 +1,120 @@
+.eventForm{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	.title{
+		font-size: 1.5rem;
+		text-align: center;
+		color: rgba(37, 45, 115, 0.9);
+		font-weight: 500;
+		margin-bottom: 15px;
+		
+		&::after{
+			content: "";
+			width: 150px;
+			height: 2px;
+			border-radius: 3px;
+			background-color: rgba(37, 45, 115, 0.9);
+			position: absolute;
+			left: 48%;
+			top: 195px;
+			transform: translate(-50px);
+			@media (max-width: 992px) {
+				display: none;
+			}
+		}
+		@media (max-width:768px) {
+				font-size: 1.2rem;
+			}
+
+	}
+
+	.formContainer{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.mainContent{
+			margin-bottom: 10px;
+			.inputContainer {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				input {
+					background: #eaeaea;
+					margin: 15px 0px 5px;
+					border-radius: 3px;
+					border: rgba(105, 106, 112, 0.48);
+					padding: 5px;
+					width: 300px;
+					text-align: center;
+					@media (max-width: 460px) {
+						width: 250px
+					}
+				}
+				.fieldWarning {
+					color: rgba(245, 48, 51, 0.96);
+					font-weight: 400;
+					text-transform: lowercase;
+					margin-bottom: 10px;
+				}
+			}
+		}
+		.notificationContent{
+			color: #377dff;
+			margin-bottom: 10px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.container{
+				display: flex;
+				flex-direction: row;
+
+				.toggleName {
+						margin-right: 15px;
+					}
+			}
+
+			.select {
+				margin-top: 10px;
+				font-size: 14px;
+				line-height: 24px;
+				color: #333333;
+				background-color: #F5F5F5;
+				border-radius: 4px;
+				padding: 4px 8px;
+				border: none;
+				outline: none;
+				width: 100%;
+				outline: none;
+
+				&:focus{
+					box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+				}
+
+				& option:first-child{
+					display: none;
+				}
+
+				&option{
+					color: #333333;
+					background-color: #F5F5F5;
+					font-size: 16px;
+					line-height: 24px;
+				}
+			}
+		}
+	}	
+	.submitButton {
+		border-radius: 5px;
+		background-color: #377dff;
+		border: none;
+		color: #eaeaea;
+		font-weight: 600;
+	}
+}
+
+

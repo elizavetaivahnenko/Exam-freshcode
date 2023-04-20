@@ -1,4 +1,4 @@
-import ACTION from './actionTypes';
+import ACTION from "./actionTypes";
 
 export const authActionLogin = (data, history) => ({
   type: ACTION.AUTH_ACTION_LOGIN,
@@ -48,7 +48,9 @@ export const getDataForContest = (data) => ({
   data,
 });
 
-export const clearDataForContest = () => ({ type: ACTION.CLEAR_DATA_FOR_SELECTS });
+export const clearDataForContest = () => ({
+  type: ACTION.CLEAR_DATA_FOR_SELECTS,
+});
 
 export const getContestsForCreative = (data) => ({
   type: ACTION.GET_CONTESTS_FOR_CREATIVE,
@@ -145,7 +147,6 @@ export const goToExpandedDialog = (data) => ({
 });
 
 export const getDialogMessages = (data) => ({
-
   type: ACTION.GET_DIALOG_MESSAGES_ASYNC,
   data,
 });
@@ -291,4 +292,9 @@ export const clearChatError = () => ({
 export const changeModalShow = (data) => ({
   type: ACTION.CHANGE_SHOW_MODAL,
   data,
+});
+
+export const counterTimeIsOver = (timerName) => ({
+  type: ACTION.COUNTER_TIME_IS_OVER,
+  timerName,
 });

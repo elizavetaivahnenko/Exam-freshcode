@@ -1,0 +1,118 @@
+.timer {
+	padding: 15px;
+	margin: 0 auto;
+	position: relative;
+	margin-bottom: 50px;
+
+	&__header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 10px;
+		border-bottom: 1px solid gray;
+		margin-bottom: 10px;
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 1.2;
+		align-items: center;
+
+		&_block {
+			display: none;
+
+			@media (min-width:768px) {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				
+				.title {
+					margin-right: 10px;
+				}
+
+				.icon {
+					color: rgba(26, 24, 25, 0.31);
+					font-size: 30px;
+				}
+			}
+		}
+	}
+
+	&__body {
+		width: 100%;
+		max-height: 320px;
+		overflow: hidden;
+		overflow-y: auto;
+		scroll-behavior: smooth;
+		margin-bottom: 50px;
+
+		ul {
+			margin-right: 15px;
+		}
+
+		.progressbar {
+			margin-top: 10px;
+			margin-bottom: 10px;
+			position: relative;
+			background-color: rgba(26, 24, 25, 0.09);
+			border-radius: 15px;
+			width: 100%;
+
+			&.finish {
+				background-color: rgba(241, 104, 67, 0.23);
+			}
+
+			&_complete {
+				background-color: rgba(157, 227, 199, 0.69);
+				border-radius: 15px;
+				z-index: 1;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+			}
+
+			&__body {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				padding: 10px 15px;
+				text-align: center;
+
+				.name {
+					color: black;
+					z-index: 2;
+					font-weight: 600;
+					font-size: 16px;
+					margin: 0;
+				}
+
+				.time {
+					font-weight: 500;
+					margin: 0;
+					z-index: 2;
+				}
+
+				.timeOver {
+					color: black;
+					z-index: 2;
+				}
+			}
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: rgba(36, 40, 38, 0.36);
+			border-radius: 5px;
+		}
+
+		&::-webkit-scrollbar {
+			width: 10px;
+
+		}
+
+		&::-webkit-scrollbar-track {
+			background-color: rgba(187, 196, 192, 0.23);
+			border-radius: 5px;
+		}
+	}
+}
