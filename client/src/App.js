@@ -19,7 +19,7 @@ import CONSTANTS from "./constants";
 import browserHistory from "./browserHistory";
 import ChatContainer from "./components/Chat/ChatComponents/ChatContainer/ChatContainer";
 import Events from "./pages/Events/Events";
-import EventsCounter from "./EventsCounter/EventsCounter";
+import NotificationTime from "./components/NotificationTime/NotificationTime";
 
 class App extends Component {
   render() {
@@ -89,7 +89,7 @@ class App extends Component {
           <Route component={NotFound} />
         </Switch>
         <ChatContainer />
-        <EventsCounter />
+        <NotificationTime />
       </Router>
     );
   }
