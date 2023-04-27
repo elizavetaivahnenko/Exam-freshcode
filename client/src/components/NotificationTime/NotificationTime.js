@@ -1,9 +1,9 @@
 import React from "react";
-import { useLocalStorage } from "../../hook/useLocalStorage";
 import styles from "./NotificationTime.module.scss";
+import { useNotificationCounter } from "../../hook/useNotificationCounter";
 
 export default function NotificationTime() {
-  const [, , notificationCount] = useLocalStorage("myData", null);
+  const [notificationCount] = useNotificationCounter("myData", null);
   return (
     <div
       className={

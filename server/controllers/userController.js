@@ -1,4 +1,4 @@
-const bd = require("../models");
+const { sequelize, Sequelize, Offer, Rating } = require("../models");
 const controller = require("../socketInit");
 const userQueries = require("./queries/userQueries");
 const ratingQueries = require("./queries/ratingQueries");
@@ -25,16 +25,15 @@ module.exports.changeMark = async (req, res, next) => {
   const { isFirst, offerId, mark, creatorId } = req.body;
   const userId = req.tokenData.userId;
   try {
-    transaction = await bd.sequelize.transaction({
-      isolationLevel:
-        bd.Sequelize.Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED,
+    transaction = await sequelize.transaction({
+      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED,
     });
     const query = getQuery(offerId, userId, mark, isFirst, transaction);
     await query();
-    const offersArray = await bd.Ratings.findAll({
+    const offersArray = await Rating.findAll({
       include: [
         {
-          model: bd.Offers,
+          model: Offer,
           required: true,
           where: { userId: creatorId },
         },
