@@ -28,6 +28,16 @@ module.exports = (sequelize, DataTypes) => {
           max: 5,
         },
       },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: sequelize.literal("NOW()"),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal("NOW()"),
+      },
     },
     {
       sequelize,

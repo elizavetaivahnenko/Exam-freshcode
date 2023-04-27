@@ -77,8 +77,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       createdAt: {
-        allowNull: true,
+        allowNull: false,
         type: DataTypes.STRING,
+        defaultValue: sequelize.literal("NOW()"),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal("NOW()"),
       },
       status: {
         type: DataTypes.STRING,

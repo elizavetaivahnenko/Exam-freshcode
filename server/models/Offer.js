@@ -42,6 +42,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: "pending",
       },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: sequelize.literal("NOW()"),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal("NOW()"),
+      },
     },
     {
       sequelize,

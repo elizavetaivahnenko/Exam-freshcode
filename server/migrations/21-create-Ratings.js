@@ -1,14 +1,13 @@
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Ratings', {
+    return queryInterface.createTable("Ratings", {
       offerId: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Offers',
-          key: 'id',
+          model: "Offers",
+          key: "id",
         },
       },
       userId: {
@@ -16,8 +15,8 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: 'Users',
-          key: 'id',
+          model: "Users",
+          key: "id",
         },
       },
       mark: {
@@ -29,9 +28,19 @@ module.exports = {
           max: 5,
         },
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Ratings');
+    return queryInterface.dropTable("Ratings");
   },
 };

@@ -1,7 +1,6 @@
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Contests', {
+    return queryInterface.createTable("Contests", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,7 +9,7 @@ module.exports = {
       },
       contestType: {
         allowNull: false,
-        type: Sequelize.ENUM('name', 'tagline', 'logo'),
+        type: Sequelize.ENUM("name", "tagline", "logo"),
       },
       fileName: {
         allowNull: true,
@@ -65,7 +64,12 @@ module.exports = {
         type: Sequelize.DECIMAL,
       },
       createdAt: {
-        allowNull: true,
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
@@ -81,13 +85,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users',
-          key: 'id',
+          model: "Users",
+          key: "id",
         },
       },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Contests');
+    return queryInterface.dropTable("Contests");
   },
 };
