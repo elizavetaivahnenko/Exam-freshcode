@@ -34,12 +34,7 @@ module.exports.getModeratorOffers = async (req, res, next) => {
         {
           model: User,
           required: false,
-          attributes: ["email"],
-        },
-        {
-          model: Contest,
-          required: false,
-          attributes: ["contestType", "typeOfName", "prize"],
+          attributes: ["email", "displayName"],
         },
       ],
     });
