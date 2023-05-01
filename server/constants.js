@@ -28,4 +28,9 @@ module.exports = {
   NOTIFICATION_CHANGE_OFFER_STATUS: "changeOfferStatus",
   NEW_MESSAGE: "newMessage",
   CHANGE_BLOCK_STATUS: "CHANGE_BLOCK_STATUS",
+  MODERATION_STATUS: {
+    CONFIRMED: "confirmed",
+    PROCESSING: "processing",
+    CANCELLED: "cancelled",
+  },
 };

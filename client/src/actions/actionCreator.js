@@ -298,3 +298,8 @@ export const counterTimeIsOver = (timerName) => ({
   type: ACTION.COUNTER_TIME_IS_OVER,
   timerName,
 });
+
+export const getModeratorOffers = (data) => ({
+  type: ACTION.GET_MODERATOR_OFFERS,
+  data,
+});

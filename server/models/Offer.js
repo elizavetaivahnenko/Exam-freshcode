@@ -52,6 +52,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         defaultValue: sequelize.literal("NOW()"),
       },
+      moderationStatus: {
+        type: DataTypes.ENUM("confirmed", "processing", "cancelled"),
+        allowNull: false,
+        defaultValue: "processing",
+      },
     },
     {
       sequelize,

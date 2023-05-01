@@ -50,6 +50,11 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
+      moderationStatus: {
+        type: Sequelize.ENUM("confirmed", "processing", "cancelled"),
+        allowNull: false,
+        defaultValue: "processing",
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

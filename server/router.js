@@ -16,4 +16,7 @@ router.use("/pay", payRouter);
 const usersRouter = require("./routers/usersRouter");
 router.use("/users", usersRouter);
 
+const moderatorRouter = require("./routers/moderatorRouter");
+router.use("/moderator", moderatorRouter);
+
 module.exports = router;

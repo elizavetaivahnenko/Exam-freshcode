@@ -1,6 +1,6 @@
-import { put, select } from 'redux-saga/effects';
-import ACTION from '../actions/actionTypes';
-import * as restController from '../api/rest/restController';
+import { put, select } from "redux-saga/effects";
+import ACTION from "../actions/actionTypes";
+import * as restController from "../api/rest/restController";
 
 export function* activeContestsSaga(action) {
   yield put({ type: ACTION.GET_CONTESTS_ACTION_REQUEST });
@@ -38,7 +38,10 @@ export function* dataForContestSaga(action) {
     const { data } = yield restController.dataForContest(action.data);
     yield put({ type: ACTION.GET_DATA_FOR_CONTEST_ACTION_SUCCESS, data });
   } catch (e) {
-    yield put({ type: ACTION.GET_DATA_FOR_CONTEST_ACTION_ERROR, error: e.response });
+    yield put({
+      type: ACTION.GET_DATA_FOR_CONTEST_ACTION_ERROR,
+      error: e.response,
+    });
   }
 }
 
@@ -48,7 +51,10 @@ export function* getContestByIdSaga(action) {
     const { data } = yield restController.getContestById(action.data);
     const { Offers } = data;
     delete data.Offers;
-    yield put({ type: ACTION.GET_CONTEST_BY_ID_SUCCESS, data: { contestData: data, offers: Offers } });
+    yield put({
+      type: ACTION.GET_CONTEST_BY_ID_SUCCESS,
+      data: { contestData: data, offers: Offers },
+    });
   } catch (e) {
     yield put({ type: ACTION.GET_CONTEST_BY_ID_ERROR, error: e.response });
   }

@@ -83,3 +83,13 @@ export const setNewOffer = (data) => http.post("/api/users/setNewOffer", data);
 
 export const downloadContestFile = (data) =>
   http.get(`/api/users/downloadFile/${data.fileName}`);
+
+//moderator
+export const getModeratorOffers = (data) =>
+  http.get("/api/moderator/getModeratorOffers", {
+    headers: {
+      moderStatus: data.moderStatus,
+      limit: data.limit,
+      offset: data.offset,
+    },
+  });
