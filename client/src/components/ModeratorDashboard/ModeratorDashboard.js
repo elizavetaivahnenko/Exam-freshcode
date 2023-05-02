@@ -23,7 +23,7 @@ function ModeratorDashboard({
 
   useEffect(() => {
     if (data.offers.length === 0) {
-      getModeratorOffers({ moderStatus: "processing", limit: 100, offset: 0 });
+      getModeratorOffers({ limit: 100, offset: 0 });
     }
     console.log(data);
   }, [data.offers]);

@@ -303,3 +303,8 @@ export const getModeratorOffers = (data) => ({
   type: ACTION.GET_MODERATOR_OFFERS,
   data,
 });
+
+export const changeOfferStatusByModerator = (data) => ({
+  type: ACTION.NEW_MODERATION_STATUS,
+  data,
+});

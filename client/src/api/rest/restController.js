@@ -93,3 +93,6 @@ export const getModeratorOffers = (data) =>
       offset: data.offset,
     },
   });
+
+export const newModerationStatusOffer = (data) =>
+  http.post("/api/moderator/newModerationStatusOffer", data);

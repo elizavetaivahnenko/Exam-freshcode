@@ -31,7 +31,7 @@ import {
   changeCatalogName,
 } from "./chatSagas";
 
-import { getModeratorOffers } from "./moderatorSaga";
+import { getModeratorOffers, changeOfferStatusSaga } from "./moderatorSaga";
 
 function* rootSaga() {
   yield takeLatest(ACTION.AUTH_ACTION_REGISTER, registerSaga);
@@ -69,6 +69,7 @@ function* rootSaga() {
   );
   yield takeLatest(ACTION.CHANGE_CATALOG_NAME_REQUEST, changeCatalogName);
   yield takeEvery(ACTION.GET_MODERATOR_OFFERS, getModeratorOffers);
+  yield takeEvery(ACTION.NEW_MODERATION_STATUS, changeOfferStatusSaga);
 }
 
 export default rootSaga;

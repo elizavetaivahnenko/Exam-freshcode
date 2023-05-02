@@ -31,6 +31,13 @@ export default function (state = initialState, action) {
         error: action.error,
       };
     }
+    case ACTION.NEW_MODERATION_STATUS_ERROR: {
+      return {
+        ...state,
+        isFetching: false,
+        error: action.error,
+      };
+    }
     default:
       return state;
   }

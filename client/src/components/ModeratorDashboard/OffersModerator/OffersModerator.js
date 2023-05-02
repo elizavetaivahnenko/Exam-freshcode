@@ -1,7 +1,10 @@
 import React from "react";
 import styles from "./OffersModerator.module.sass";
+import CONSTANTS from "../../../constants";
+import { changeOfferStatusByModerator } from "../../../actions/actionCreator";
+import { connect } from "react-redux";
 
-export default function OffersModerator({ data }) {
+function OffersModerator({ data, key, changeOfferStatus }) {
   return (
     <div className={styles.offer}>
       <div className={styles.offer__main}>
@@ -20,10 +23,47 @@ export default function OffersModerator({ data }) {
           </div>
         </div>
       </div>
-      <div className={styles.offer__actions}>
-        <div className={styles.confirm}>Confirm</div>
-        <div className={styles.reject}>Reject</div>
-      </div>
+      {data.moderationStatus === "processing" ? (
+        <div className={styles.offer__actions}>
+          <div
+            onClick={() =>
+              changeOfferStatus({
+                moderStatus: CONSTANTS.MODERATION_STATUS.CONFIRMED,
+                offerId: data.id,
+              })
+            }
+            className={styles.confirm}
+          >
+            Confirm
+          </div>
+          <div
+            onClick={() =>
+              changeOfferStatus({
+                moderStatus: CONSTANTS.MODERATION_STATUS.CANCELLED,
+                offerId: data.id,
+              })
+            }
+            className={styles.reject}
+          >
+            Reject
+          </div>
+        </div>
+      ) : (
+        <div>{`Offer status: ${data.moderationStatus}`}</div>
+      )}
     </div>
   );
 }
+
+// const mapStateToProps = (state) => {
+//   return {
+//     data: state.moderationStatus,
+//   };
+// };
+
+const mapDispatchToProps = (dispatch) => ({
+  changeOfferStatus: (offerData) =>
+    dispatch(changeOfferStatusByModerator(offerData)),
+});
+
+export default connect(null, mapDispatchToProps)(OffersModerator);

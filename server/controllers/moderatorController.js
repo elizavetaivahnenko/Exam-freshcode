@@ -15,10 +15,9 @@ const UtilFunctions = require("../utils/functions");
 const CONSTANTS = require("../constants");
 
 module.exports.getModeratorOffers = async (req, res, next) => {
-  console.log(req.headers);
   try {
     const { count: totalOffers, rows: offers } = await Offer.findAndCountAll({
-      where: { moderationStatus: req.headers.moderstatus },
+      // where: { moderationStatus: req.headers.moderstatus },
       attributes: [
         "id",
         "userId",

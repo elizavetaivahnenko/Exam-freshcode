@@ -11,6 +11,7 @@ import updateContestReducer from "./updateContestReducer";
 import chatReducer from "./chatReducer";
 import userProfileReducer from "./userProfileReducer";
 import moderatorReducer from "./moderatorReducer";
+import changeOfferStatus from "./changeOfferStatus";
 
 const appReducer = combineReducers({
   userStore: getUserReducer,
