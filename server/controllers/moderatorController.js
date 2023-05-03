@@ -1,23 +1,10 @@
-const {
-  Sequelize,
-  sequelize,
-  Contest,
-  Rating,
-  Select,
-  Offer,
-  User,
-} = require("../models");
+const { Offer, User } = require("../models");
 const ServerError = require("../errors/ServerError");
-const contestQueries = require("./queries/contestQueries");
-const userQueries = require("./queries/userQueries");
-const controller = require("../socketInit");
-const UtilFunctions = require("../utils/functions");
-const CONSTANTS = require("../constants");
 
 module.exports.getModeratorOffers = async (req, res, next) => {
   try {
     const { count: totalOffers, rows: offers } = await Offer.findAndCountAll({
-      // where: { moderationStatus: req.headers.moderstatus },
+      where: { moderationStatus: req.headers.moderstatus },
       attributes: [
         "id",
         "userId",

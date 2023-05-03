@@ -308,3 +308,12 @@ export const changeOfferStatusByModerator = (data) => ({
   type: ACTION.NEW_MODERATION_STATUS,
   data,
 });
+
+export const setModeratorFilter = (filter) => ({
+  type: ACTION.SET_NEW_MODERATOR_FILTER,
+  filter,
+});
+
+export const clearOffersList = () => ({
+  type: ACTION.CLEAR_OFFERS_LIST,
+});

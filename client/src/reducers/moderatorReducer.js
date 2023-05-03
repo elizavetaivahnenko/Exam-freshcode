@@ -1,9 +1,11 @@
 import ACTION from "../actions/actionTypes";
+import CONSTANTS from "../constants";
 
 const initialState = {
   isFetching: true,
   offers: [],
   error: null,
+  moderatorFilter: CONSTANTS.MODERATION_STATUS.PROCESSING,
 };
 
 export default function (state = initialState, action) {
@@ -36,6 +38,20 @@ export default function (state = initialState, action) {
         ...state,
         isFetching: false,
         error: action.error,
+      };
+    }
+    case ACTION.SET_NEW_MODERATOR_FILTER: {
+      return {
+        ...state,
+        isFetching: false,
+        moderatorFilter: action.filter,
+      };
+    }
+    case ACTION.CLEAR_OFFERS_LIST: {
+      return {
+        ...state,
+        error: null,
+        offers: [],
       };
     }
     default:

@@ -1,171 +1,123 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { getModeratorOffers } from "../../actions/actionCreator";
+import {
+  getModeratorOffers,
+  setModeratorFilter,
+  clearOffersList,
+} from "../../actions/actionCreator";
 import styles from "./ModeratorDashboard.module.sass";
 import TryAgain from "../TryAgain/TryAgain";
 import ContestsContainer from "../ContestsContainer/ContestsContainer";
 import OffersModerator from "./OffersModerator/OffersModerator";
+import CONSTANTS from "../../constants";
+import classNames from "classnames";
 
 function ModeratorDashboard({
-  data,
-  getModeratorOffers,
-  clearContestsList,
+  moderatorFilter,
+  offers,
   isFetching,
-  history,
   error,
+  getModeratorOffers,
+  setModeratorFilter,
 }) {
+  const [offerState, setOfferState] = useState(false);
+
+  const handlerUpdateOffersState = () => {
+    setOfferState(!offerState);
+  };
   const loadMore = (startFrom) => {
+    allOffers({
+      limit: 8,
+      offset: startFrom,
+      contestStatus: moderatorFilter,
+    });
+  };
+  const allOffers = () => {
     getModeratorOffers({
       limit: 8,
-      moderStatus: "processing",
+      offset: 0,
+      moderStatus: moderatorFilter,
     });
   };
 
   useEffect(() => {
-    if (data.offers.length === 0) {
-      getModeratorOffers({ limit: 100, offset: 0 });
-    }
-    console.log(data);
-  }, [data.offers]);
-  const goToExtended = (contest_id) => {
-    this.props.history.push(`/contest/${contest_id}`);
-  };
+    allOffers();
+  }, [moderatorFilter, offerState]);
 
   const tryToGetContest = () => {
-    clearContestsList();
-    this.getContests();
+    clearOffersList();
+    allOffers();
   };
-  console.log(data.offers);
   return (
-    <div className={styles.moderatorContainer}>
-      {data.offers.map((item) => (
-        <OffersModerator
-          data={item}
-          key={item.id}
-          goToExtended={goToExtended}
-        />
-      ))}
+    <div className={styles.mainContainer}>
+      <div className={styles.filterContainer}>
+        <div
+          onClick={() =>
+            setModeratorFilter(CONSTANTS.MODERATION_STATUS.PROCESSING)
+          }
+          className={classNames({
+            [styles.activeFilter]:
+              CONSTANTS.MODERATION_STATUS.PROCESSING === moderatorFilter,
+            [styles.filter]:
+              CONSTANTS.MODERATION_STATUS.PROCESSING !== moderatorFilter,
+          })}
+        >
+          Active offers
+        </div>
+        <div
+          onClick={() =>
+            setModeratorFilter(CONSTANTS.MODERATION_STATUS.CONFIRMED)
+          }
+          className={classNames({
+            [styles.activeFilter]:
+              CONSTANTS.MODERATION_STATUS.CONFIRMED === moderatorFilter,
+            [styles.filter]:
+              CONSTANTS.MODERATION_STATUS.CONFIRMED !== moderatorFilter,
+          })}
+        >
+          Confirmed
+        </div>
+        <div
+          onClick={() =>
+            setModeratorFilter(CONSTANTS.MODERATION_STATUS.CANCELLED)
+          }
+          className={classNames({
+            [styles.activeFilter]:
+              CONSTANTS.MODERATION_STATUS.CANCELLED === moderatorFilter,
+            [styles.filter]:
+              CONSTANTS.MODERATION_STATUS.CANCELLED !== moderatorFilter,
+          })}
+        >
+          Rejected
+        </div>
+      </div>
+      <div className={styles.contestsContainer}>
+        {error ? (
+          <TryAgain getData={tryToGetContest()} />
+        ) : (
+          <ContestsContainer isFetching={isFetching} loadMore={loadMore}>
+            {offers.map((item) => (
+              <OffersModerator
+                data={item}
+                key={item.id}
+                handlerUpdateOffersState={handlerUpdateOffersState}
+              />
+            ))}
+          </ContestsContainer>
+        )}
+      </div>
     </div>
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    data: state.moderatorStore,
-  };
-};
+const mapStateToProps = (state) => state.moderatorStore;
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getModeratorOffers: (filter) => dispatch(getModeratorOffers(filter)),
+    getModeratorOffers: (data) => dispatch(getModeratorOffers(data)),
+    setModeratorFilter: (filter) => dispatch(setModeratorFilter(filter)),
+    clearOffersList: () => dispatch(clearOffersList()),
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModeratorDashboard);
-
-// import React, { useCallback, useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { setNewCustomerFilter } from "../../actions/actionCreator";
-// import styles from "./ModeratorDashboard.module.sass";
-// import ContestBox from "../ContestBox/ContestBox";
-// import ContestsContainer from "../ContestsContainer/ContestsContainer";
-// import TryAgain from "../TryAgain/TryAgain";
-// import { getContestsForModerator } from "../../actions/actionCreator";
-// import { clearContestList } from "../../actions/actionCreator";
-
-// export default function ModeratorDashboard({ history, match }) {
-//   const contests = useSelector((state) => getContestsForModerator(state));
-
-//   const setContestList = () => {
-//     const array = [];
-//     for (let i = 0; i < contests.length; i++) {
-//       array.push(<ContestBox data={contests[i]} key={contests[i].id} />);
-//     }
-//     return array;
-//   };
-
-//   return <div className="mainContainer">{setContestList()}</div>;
-// }
-
-// import React, { useCallback, useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { setNewCustomerFilter } from "../../actions/actionCreator";
-// import styles from "./ModeratorDashboard.module.sass";
-// import ContestBox from "../ContestBox/ContestBox";
-// import ContestsContainer from "../ContestsContainer/ContestsContainer";
-// import TryAgain from "../TryAgain/TryAgain";
-// import { getContestsForCustomer } from "../../actions/actionCreator";
-// import { clearContestList } from "../../actions/actionCreator";
-
-// export default function ModeratorDashboard({ history, match }) {
-//   const dispatch = useDispatch();
-//   const { error, haveMore } = match;
-//   const { isFetching, contests } = useSelector((state) => state.contestsList);
-//   const { customerFilter } = useDispatch((filter) =>
-//     setNewCustomerFilter(filter)
-//   );
-//   const handleClearContestList = () => dispatch(clearContestList());
-//   const getContests = (data) => dispatch(getContestsForCustomer(data));
-
-//   useEffect(() => {
-//     getContests({
-//       limit: 8,
-//       contestStatus: customerFilter,
-//     });
-//     return () => {
-//       handleClearContestList();
-//     };
-//   }, [getContests, handleClearContestList, customerFilter]);
-
-//   const loadMore = useCallback(
-//     (startFrom) => {
-//       getContests({
-//         limit: 8,
-//         offset: startFrom,
-//         contestStatus: customerFilter,
-//       });
-//     },
-//     [getContests, customerFilter]
-//   );
-//   const goToExtended = (contest_id) => {
-//     history.push(`/contest/${contest_id}`);
-//   };
-
-//   const setContestList = () => {
-//     const array = [];
-//     for (let i = 0; i < contests.length; i++) {
-//       array.push(
-//         <ContestBox
-//           data={contests[i]}
-//           key={contests[i].id}
-//           goToExtended={goToExtended}
-//         />
-//       );
-//     }
-//     return array;
-//   };
-
-//   const tryToGetContest = () => {
-//     handleClearContestList();
-//     getContests();
-//   };
-//   return (
-//     <div className="mainContainer">
-//       {error ? (
-//         <div className={styles.messageContainer}>
-//           <TryAgain getData={tryToGetContest()} />
-//         </div>
-//       ) : (
-//         <ContestsContainer
-//           isFetching={isFetching}
-//           loadMore={loadMore}
-//           history={history}
-//           haveMore={haveMore}
-//         >
-//           {setContestList()}
-//         </ContestsContainer>
-//       )}
-//       hello moderator
-//     </div>
-//   );
-// }

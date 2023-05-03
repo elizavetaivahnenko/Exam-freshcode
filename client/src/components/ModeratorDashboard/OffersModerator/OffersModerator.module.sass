@@ -6,8 +6,11 @@
 	background-color: #f9fafb
 	padding: 30px 20px 10px 20px
 	margin-bottom: 15px
-	@media(max-width: 400px)
-		flex-direction: column
+	@media (min-width: 1023px)
+		min-width: 890px
+		margin-right: 10px
+	@media (max-width: 560px)
+		max-width: 460px
 
 	&__main
 		flex: 1 1
@@ -56,12 +59,12 @@
 	&__actions
 		display: flex
 
-		@media (max-width: 765px)
+		@media (max-width:530px)
 			display: flex
 			flex-direction: column
 
 		.reject
-			padding: 10px 20px
+			padding: 5px 20px
 			border-radius: 5px
 			border: 1px solid rgba(247, 26, 26, 1)
 			color: rgba(247, 26, 26, 0.71)
@@ -70,17 +73,21 @@
 			text-align: center
 			text-decoration: none
 			cursor: pointer
+			width: 85px
+			text-align: center
 
 			@media (max-width: 765px)
 				padding: 5px
 				font-size: 14px
+				margin-bottom: 10px
+				width: 65px
 
 			&:hover
 				background-color: rgba(247, 26, 26, 1)
 				color: #fff
 
 		.confirm
-			padding: 10px 20px
+			padding: 5px 10px
 			border-radius: 5px
 			border: 1px solid #556da5
 			color: #556da5
@@ -90,12 +97,19 @@
 			text-decoration: none
 			cursor: pointer
 			margin-right: 10px
+			width: 85px
 
 			@media (max-width: 765px)
 				padding: 5px
 				font-size: 14px
 				margin-bottom: 10px
+				width: 65px
 
 			&:hover
 				background-color: #556da5
 				color: #fff
+
+	.offerStatus
+		color: #556da5
+		font-size: 18px
+		font-weight: 500

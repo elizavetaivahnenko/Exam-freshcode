@@ -1,16 +1,16 @@
-import ACTION from '../actions/actionTypes';
-import CONSTANTS from '../constants';
+import ACTION from "../actions/actionTypes";
+import CONSTANTS from "../constants";
 
 const initialState = {
   isFetching: true,
   error: null,
   contests: [],
-  customerFilter: CONSTANTS.CONTEST_STATUS_ACTIVE,
+  customerFilter: CONSTANTS.MODERATION_STATUS.PROCESSING,
   creatorFilter: {
     typeIndex: 1,
-    contestId: '',
-    industry: '',
-    awardSort: 'asc',
+    contestId: "",
+    industry: "",
+    awardSort: "asc",
     ownEntries: false,
   },
   haveMore: true,

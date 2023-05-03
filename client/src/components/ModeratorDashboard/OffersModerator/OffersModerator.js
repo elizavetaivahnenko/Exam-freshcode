@@ -4,7 +4,26 @@ import CONSTANTS from "../../../constants";
 import { changeOfferStatusByModerator } from "../../../actions/actionCreator";
 import { connect } from "react-redux";
 
-function OffersModerator({ data, key, changeOfferStatus }) {
+function OffersModerator({
+  data,
+  changeOfferStatus,
+  handlerUpdateOffersState,
+}) {
+  const handleConfirmClick = () => {
+    changeOfferStatus({
+      moderStatus: CONSTANTS.MODERATION_STATUS.CONFIRMED,
+      offerId: data.id,
+    });
+    handlerUpdateOffersState();
+  };
+  const handleRejectClick = () => {
+    changeOfferStatus({
+      moderStatus: CONSTANTS.MODERATION_STATUS.CANCELLED,
+      offerId: data.id,
+    });
+    handlerUpdateOffersState();
+  };
+
   return (
     <div className={styles.offer}>
       <div className={styles.offer__main}>
@@ -25,41 +44,19 @@ function OffersModerator({ data, key, changeOfferStatus }) {
       </div>
       {data.moderationStatus === "processing" ? (
         <div className={styles.offer__actions}>
-          <div
-            onClick={() =>
-              changeOfferStatus({
-                moderStatus: CONSTANTS.MODERATION_STATUS.CONFIRMED,
-                offerId: data.id,
-              })
-            }
-            className={styles.confirm}
-          >
+          <div onClick={() => handleConfirmClick()} className={styles.confirm}>
             Confirm
           </div>
-          <div
-            onClick={() =>
-              changeOfferStatus({
-                moderStatus: CONSTANTS.MODERATION_STATUS.CANCELLED,
-                offerId: data.id,
-              })
-            }
-            className={styles.reject}
-          >
+          <div onClick={() => handleRejectClick()} className={styles.reject}>
             Reject
           </div>
         </div>
       ) : (
-        <div>{`Offer status: ${data.moderationStatus}`}</div>
+        <div className={styles.offerStatus}>{data.moderationStatus}</div>
       )}
     </div>
   );
 }
-
-// const mapStateToProps = (state) => {
-//   return {
-//     data: state.moderationStatus,
-//   };
-// };
 
 const mapDispatchToProps = (dispatch) => ({
   changeOfferStatus: (offerData) =>
