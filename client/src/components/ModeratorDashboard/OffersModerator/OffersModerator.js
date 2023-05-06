@@ -26,34 +26,29 @@ function OffersModerator({
 
   return (
     <div className={styles.offer}>
-      <div className={styles.offer__main}>
-        <div className={styles.offer__titleAndId}>
-          <span className={styles.title}>{data.text}</span>
-          <span className={styles.id}>{`(#${data.id})`}</span>
-        </div>
-        <div className={styles.offer__user}>
-          <div>
-            <span className={styles.userLabel}>User email:</span>
-            <span className={styles.userValue}>{data.User.email}</span>
-          </div>
-          <div>
-            <span className={styles.userLabel}>User name:</span>
-            <span className={styles.userValue}>{data.User.displayName}</span>
-          </div>
-        </div>
+      <div className={styles.body}>
+        <div>{data.id}</div>
+        <div>{data.text}</div>
+        <div>{data.User.email}</div>
+        <div>{data.User.displayName}</div>
       </div>
-      {data.moderationStatus === "processing" ? (
-        <div className={styles.offer__actions}>
-          <div onClick={() => handleConfirmClick()} className={styles.confirm}>
-            Confirm
+      <div>
+        {data.moderationStatus === "processing" ? (
+          <div className={styles.offer__actions}>
+            <div
+              onClick={() => handleConfirmClick()}
+              className={styles.confirm}
+            >
+              Confirm
+            </div>
+            <div onClick={() => handleRejectClick()} className={styles.reject}>
+              Reject
+            </div>
           </div>
-          <div onClick={() => handleRejectClick()} className={styles.reject}>
-            Reject
-          </div>
-        </div>
-      ) : (
-        <div className={styles.offerStatus}>{data.moderationStatus}</div>
-      )}
+        ) : (
+          <div className={styles.offerStatus}>{data.moderationStatus}</div>
+        )}
+      </div>
     </div>
   );
 }
@@ -64,3 +59,36 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(OffersModerator);
+
+{
+  /* <div className={styles.offer__main}>
+  <div className={styles.offer__titleAndId}>
+    <span className={styles.title}>{data.text}</span>
+    <span className={styles.id}>{`(#${data.id})`}</span>
+  </div>
+  <div className={styles.offer__user}>
+    <div>
+      <span className={styles.userLabel}>User email:</span>
+      <span className={styles.userValue}>{data.User.email}</span>
+    </div>
+    <div>
+      <span className={styles.userLabel}>User name:</span>
+      <span className={styles.userValue}>{data.User.displayName}</span>
+    </div>
+  </div>
+</div>;
+{
+  data.moderationStatus === "processing" ? (
+    <div className={styles.offer__actions}>
+      <div onClick={() => handleConfirmClick()} className={styles.confirm}>
+        Confirm
+      </div>
+      <div onClick={() => handleRejectClick()} className={styles.reject}>
+        Reject
+      </div>
+    </div>
+  ) : (
+    <div className={styles.offerStatus}>{data.moderationStatus}</div>
+  );
+} */
+}

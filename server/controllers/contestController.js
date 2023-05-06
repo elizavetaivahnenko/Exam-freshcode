@@ -13,6 +13,7 @@ const userQueries = require("./queries/userQueries");
 const controller = require("../socketInit");
 const UtilFunctions = require("../utils/functions");
 const CONSTANTS = require("../constants");
+const { includes } = require("lodash");
 
 module.exports.dataForContest = async (req, res, next) => {
   const response = {};
@@ -67,7 +68,7 @@ module.exports.getContestById = async (req, res, next) => {
           where:
             req.tokenData.role === CONSTANTS.CREATOR
               ? { userId: req.tokenData.userId }
-              : {},
+              : { moderationStatus: CONSTANTS.MODERATION_STATUS.CONFIRMED },
           attributes: { exclude: ["userId", "contestId"] },
           include: [
             {

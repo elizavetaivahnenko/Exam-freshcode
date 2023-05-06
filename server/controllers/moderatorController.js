@@ -1,5 +1,6 @@
 const { Offer, User } = require("../models");
 const ServerError = require("../errors/ServerError");
+const sendStatusOfferOnEmail = require("../utils/sendStatusOfferOnEmail");
 
 module.exports.getModeratorOffers = async (req, res, next) => {
   try {
@@ -45,6 +46,18 @@ module.exports.newModerationStatusOffer = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
+    const mailData = await Offer.findOne({
+      where: { id: req.body.offerId },
+      attributes: ["text", "status"],
+      include: [
+        {
+          model: User,
+          required: false,
+          attributes: ["email", "displayName"],
+        },
+      ],
+    });
+    sendStatusOfferOnEmail(mailData);
     res.status(201).send("Moderation status updated successfully.");
   } catch (err) {
     next(err);

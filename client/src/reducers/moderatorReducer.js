@@ -6,6 +6,7 @@ const initialState = {
   offers: [],
   error: null,
   moderatorFilter: CONSTANTS.MODERATION_STATUS.PROCESSING,
+  totalOffers: null,
 };
 
 export default function (state = initialState, action) {
@@ -23,6 +24,8 @@ export default function (state = initialState, action) {
         isFetching: false,
         offers: [...action.data.offers],
         error: null,
+        offset: action.data.offset,
+        totalOffers: action.data.totalOffers,
       };
     }
     case ACTION.GET_MODERATOR_OFFERS_ERROR: {

@@ -33,4 +33,6 @@ module.exports = {
     PROCESSING: "processing",
     CANCELLED: "cancelled",
   },
+  EMAIL_SENDER: "squadhelp@gmail.com",
+  MODERATOR: "moderator",
 };

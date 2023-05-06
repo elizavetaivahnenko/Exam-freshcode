@@ -124,3 +124,14 @@ module.exports.canUpdateContest = async (req, res, next) => {
     next(new ServerError());
   }
 };
+
+// module.exports.onlyForCreativeAndCustomer = (req, res, next) => {
+//   if (
+//     req.tokenData.role === CONSTANTS.CREATOR ||
+//     req.tokenData.role === CONSTANTS.CUSTOMER
+//   ) {
+//     next();
+//   } else {
+//     return next(new RightsError("this page only for customers and creative"));
+//   }
+// };

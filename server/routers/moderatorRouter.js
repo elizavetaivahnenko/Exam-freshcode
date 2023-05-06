@@ -8,15 +8,15 @@ const moderatorRouter = Router();
 
 moderatorRouter.get(
   "/getModeratorOffers",
-  // checkToken.checkToken,
-  // basicMiddlewares.onlyForModerator,
+  checkToken.checkToken,
+  basicMiddlewares.onlyForModerator,
   moderatorController.getModeratorOffers
 );
 
 moderatorRouter.post(
   "/newModerationStatusOffer",
-  // checkToken.checkToken,
-  // basicMiddlewares.onlyForModerator,
+  checkToken.checkToken,
+  basicMiddlewares.onlyForModerator,
   moderatorController.newModerationStatusOffer
 );
 

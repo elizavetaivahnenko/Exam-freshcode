@@ -59,44 +59,59 @@ class Header extends React.Component {
               src={`${CONSTANTS.STATIC_IMAGES_PATH}menu-down.png`}
               alt="menu"
             />
-            <ul>
-              <li>
-                <Link to="/events" style={{ textDecoration: "none" }}>
-                  <span>Events</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/dashboard" style={{ textDecoration: "none" }}>
-                  <span>View Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/account" style={{ textDecoration: "none" }}>
-                  <span>My Account</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="http:/www.google.com"
-                  style={{ textDecoration: "none" }}
-                >
-                  <span>Messages</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="http:/www.google.com"
-                  style={{ textDecoration: "none" }}
-                >
-                  <span>Affiliate Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/">
-                  <span onClick={this.logOut}>Logout</span>
-                </Link>
-              </li>
-            </ul>
+            {this.props.data.role === CONSTANTS.MODERATOR ? (
+              <ul>
+                <li>
+                  <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                    <span>View Offers</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/">
+                    <span onClick={this.logOut}>Logout</span>
+                  </Link>
+                </li>
+              </ul>
+            ) : (
+              <ul>
+                <li>
+                  <Link to="/events" style={{ textDecoration: "none" }}>
+                    <span>Events</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                    <span>View Dashboard</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/account" style={{ textDecoration: "none" }}>
+                    <span>My Account</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="http:/www.google.com"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <span>Messages</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="http:/www.google.com"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <span>Affiliate Dashboard</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/">
+                    <span onClick={this.logOut}>Logout</span>
+                  </Link>
+                </li>
+              </ul>
+            )}
           </div>
           <img
             src={`${CONSTANTS.STATIC_IMAGES_PATH}email.png`}
@@ -335,14 +350,16 @@ class Header extends React.Component {
                 </li>
               </ul>
             </div>
-            {this.props.data && this.props.data.role !== CONSTANTS.CREATOR && (
-              <div
-                className={styles.startContestBtn}
-                onClick={this.startContests}
-              >
-                START CONTEST
-              </div>
-            )}
+            {this.props.data &&
+              this.props.data.role !== CONSTANTS.CREATOR &&
+              this.props.data.role !== CONSTANTS.MODERATOR && (
+                <div
+                  className={styles.startContestBtn}
+                  onClick={this.startContests}
+                >
+                  START CONTEST
+                </div>
+              )}
           </div>
         </div>
       </div>

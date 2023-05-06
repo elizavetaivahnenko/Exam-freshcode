@@ -19,22 +19,44 @@ function ModeratorDashboard({
   error,
   getModeratorOffers,
   setModeratorFilter,
+  totalOffers,
 }) {
   const [offerState, setOfferState] = useState(false);
+  const [pageNumber, setPageNumber] = useState(0);
 
   const handlerUpdateOffersState = () => {
     setOfferState(!offerState);
   };
-  const loadMore = (startFrom) => {
-    allOffers({
-      limit: 8,
-      offset: startFrom,
-      contestStatus: moderatorFilter,
+  const loadMore = (prevOffset) => {
+    getModeratorOffers({
+      limit: 2,
+      offset: prevOffset,
+      moderStatus: moderatorFilter,
+    });
+  };
+  const loadMorePage = (action) => {
+    let nextPage = pageNumber;
+    if (action === "next") {
+      nextPage += 2;
+      if (nextPage >= totalOffers) {
+        nextPage = 0;
+      }
+    } else if (action === "prev") {
+      nextPage -= 2;
+      if (nextPage < 0) {
+        nextPage = totalOffers;
+      }
+    }
+    setPageNumber(nextPage);
+    getModeratorOffers({
+      limit: 2,
+      offset: nextPage,
+      moderStatus: moderatorFilter,
     });
   };
   const allOffers = () => {
     getModeratorOffers({
-      limit: 8,
+      limit: 2,
       offset: 0,
       moderStatus: moderatorFilter,
     });
@@ -95,15 +117,40 @@ function ModeratorDashboard({
         {error ? (
           <TryAgain getData={tryToGetContest()} />
         ) : (
-          <ContestsContainer isFetching={isFetching} loadMore={loadMore}>
-            {offers.map((item) => (
-              <OffersModerator
-                data={item}
-                key={item.id}
-                handlerUpdateOffersState={handlerUpdateOffersState}
-              />
-            ))}
-          </ContestsContainer>
+          <div className={styles.contentTable}>
+            <div className={styles.head}>
+              <h3>ID</h3>
+              <h3>Offer name</h3>
+              <h3>User email</h3>
+              <h3>File name</h3>
+              <h3>Status</h3>
+            </div>
+            <div className={styles.body}>
+              <ContestsContainer isFetching={isFetching} loadMore={loadMore}>
+                {offers.map((item) => (
+                  <OffersModerator
+                    data={item}
+                    key={item.id}
+                    handlerUpdateOffersState={handlerUpdateOffersState}
+                  />
+                ))}
+              </ContestsContainer>
+            </div>
+            <div className={styles.turningButtons}>
+              <div
+                className={styles.turningPage}
+                onClick={() => loadMorePage("next")}
+              >
+                NEXT
+              </div>
+              <div
+                className={styles.turningPage}
+                onClick={() => loadMorePage("prev")}
+              >
+                PREV
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

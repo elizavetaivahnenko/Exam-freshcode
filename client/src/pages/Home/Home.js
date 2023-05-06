@@ -35,6 +35,7 @@ const Home = (props) => {
   return (
     <>
       <Header />
+      {}
       {isFetching ? (
         <Spinner />
       ) : (
