@@ -5,7 +5,7 @@ const initialState = {
   isFetching: true,
   error: null,
   contests: [],
-  customerFilter: CONSTANTS.MODERATION_STATUS.PROCESSING,
+  customerFilter: CONSTANTS.CONTEST_STATUS_ACTIVE,
   creatorFilter: {
     typeIndex: 1,
     contestId: "",
