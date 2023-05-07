@@ -1,31 +1,46 @@
 "use strict";
-const { EMAIL_SENDER } = require("../constants");
+const { TOOLS_FOR_MAILER } = require("../constants");
 const nodemailer = require("nodemailer");
+const { HOST, PORT, EMAIL_SENDER, AUTH } = TOOLS_FOR_MAILER;
 
-module.exports.sendStatusOfferOnEmail = async (
-  userName,
-  userEmail,
-  text,
-  status
-) => {
-  const message = {
-    from: EMAIL_SENDER,
-    to: userEmail,
-    subject: `Your offer was ${status}ed`,
-    html: `<h3>Hello, ${userName}</h3> <p>Your offer ${text} was ${status}ed one minute ago</p> <h5>More details on our site</h5>`,
-  };
-
-  const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
+const transporter = nodemailer.createTransport(
+  {
+    host: HOST,
+    port: PORT,
     auth: {
-      user: "dolly98@ethereal.email",
-      pass: "X2PEgqjz8FpNqzFBfZ",
+      user: AUTH.USER,
+      pass: AUTH.PASS,
     },
-  });
+    tls: {
+      rejectUnauthorized: false,
+    },
+  },
+  { from: EMAIL_SENDER }
+);
+
+const mailer = (message) =>
   transporter.sendMail(message, (error, info) => {
     if (error) {
       return console.log(error);
     }
   });
+
+const createMessageText = (status, userName) => {
+  let text;
+  if (status === "confirmed") {
+    text = `Hello, ${userName}! Your offer was confirmed`;
+  } else if (status === "rejected") {
+    text = `Hello, ${userName}! Unfortunately, your offer was rejected`;
+  }
+  return text;
+};
+
+module.exports.sendStatusOfferOnEmail = async (mailData) => {
+  const { moderationStatus, User } = mailData;
+  const message = {
+    to: User.email,
+    subject: `Your offer was ${moderationStatus}`,
+    text: createMessageText(moderationStatus, User.firstName),
+  };
+  mailer(message);
 };
