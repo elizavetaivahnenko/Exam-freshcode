@@ -33,6 +33,14 @@ module.exports = {
     PROCESSING: "processing",
     CANCELLED: "cancelled",
   },
-  EMAIL_SENDER: "squadhelp@gmail.com",
   MODERATOR: "moderator",
+  TOOLS_FOR_MAILER: {
+    HOST: "smtp.ethereal.email",
+    PORT: 587,
+    EMAIL_SENDER: "squadhelp.com",
+    AUTH: {
+      USER: "lonnie.bauch@ethereal.email",
+      PASS: "8W5wecXzgZrEA28pbr",
+    },
+  },
 };

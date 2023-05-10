@@ -1,4 +1,4 @@
-const { Contest, Offer } = require("../../models");
+const { Contest, Offer, User } = require("../../models");
 const ServerError = require("../../errors/ServerError");
 
 module.exports.updateContest = async (data, predicate, transaction) => {
@@ -59,5 +59,24 @@ module.exports.createOffer = async (data) => {
     throw new ServerError("cannot create new Offer");
   } else {
     return result.get({ plain: true });
+  }
+};
+
+module.exports.getDataForMail = async (offerId) => {
+  try {
+    let mailData = await Offer.findOne({
+      where: { id: offerId },
+      attributes: ["moderationStatus"],
+      include: [
+        {
+          model: User,
+          required: false,
+          attributes: ["email", "firstName"],
+        },
+      ],
+    });
+    return mailData;
+  } catch (err) {
+    console.log(err);
   }
 };

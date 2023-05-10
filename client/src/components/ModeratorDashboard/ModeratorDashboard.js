@@ -29,7 +29,7 @@ function ModeratorDashboard({
   };
   const loadMore = (prevOffset) => {
     getModeratorOffers({
-      limit: 2,
+      limit: 8,
       offset: prevOffset,
       moderStatus: moderatorFilter,
     });
@@ -37,26 +37,26 @@ function ModeratorDashboard({
   const loadMorePage = (action) => {
     let nextPage = pageNumber;
     if (action === "next") {
-      nextPage += 2;
+      nextPage += 8;
       if (nextPage >= totalOffers) {
         nextPage = 0;
       }
     } else if (action === "prev") {
-      nextPage -= 2;
-      if (nextPage < 0) {
-        nextPage = totalOffers;
+      nextPage -= 8;
+      if (nextPage <= 0) {
+        nextPage = 0;
       }
     }
     setPageNumber(nextPage);
     getModeratorOffers({
-      limit: 2,
+      limit: 8,
       offset: nextPage,
       moderStatus: moderatorFilter,
     });
   };
   const allOffers = () => {
     getModeratorOffers({
-      limit: 2,
+      limit: 8,
       offset: 0,
       moderStatus: moderatorFilter,
     });
@@ -70,6 +70,7 @@ function ModeratorDashboard({
     clearOffersList();
     allOffers();
   };
+  console.log(pageNumber);
   return (
     <div className={styles.mainContainer}>
       <div className={styles.filterContainer}>
@@ -138,16 +139,18 @@ function ModeratorDashboard({
             </div>
             <div className={styles.turningButtons}>
               <div
+                className={classNames(styles.turningPage, {
+                  [styles.hidePrev]: pageNumber === 0,
+                })}
+                onClick={() => loadMorePage("prev")}
+              >
+                PREV
+              </div>
+              <div
                 className={styles.turningPage}
                 onClick={() => loadMorePage("next")}
               >
                 NEXT
-              </div>
-              <div
-                className={styles.turningPage}
-                onClick={() => loadMorePage("prev")}
-              >
-                PREV
               </div>
             </div>
           </div>

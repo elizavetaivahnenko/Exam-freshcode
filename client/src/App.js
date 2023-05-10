@@ -88,7 +88,7 @@ class App extends Component {
           <Route exact path="/events" component={PrivateHoc(Events)} />
           <Route component={NotFound} />
         </Switch>
-        {/* <ChatContainer /> */}
+        <ChatContainer />
         <NotificationTime />
       </Router>
     );

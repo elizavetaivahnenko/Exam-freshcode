@@ -1,6 +1,7 @@
 const { Offer, User } = require("../models");
 const ServerError = require("../errors/ServerError");
-const sendStatusOfferOnEmail = require("../utils/sendStatusOfferOnEmail");
+const utils = require("../utils/sendStatusOfferOnEmail");
+const contestQueries = require("./queries/contestQueries");
 
 module.exports.getModeratorOffers = async (req, res, next) => {
   try {
@@ -31,6 +32,25 @@ module.exports.getModeratorOffers = async (req, res, next) => {
   }
 };
 
+// module.exports.newModerationStatusOffer = async (req, res, next) => {
+//   try {
+//     let mailData = await Offer.findOne({
+//       where: { id: req.body.offerId },
+//       attributes: ["moderationStatus", "userId"],
+//       include: [
+//         {
+//           model: User,
+//           required: false,
+//           attributes: ["email", "firstName"],
+//         },
+//       ],
+//     });
+//     res.status(200).send(mailData);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 module.exports.newModerationStatusOffer = async (req, res, next) => {
   try {
     const [rowsUpdated] = await Offer.update(
@@ -46,18 +66,9 @@ module.exports.newModerationStatusOffer = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    const mailData = await Offer.findOne({
-      where: { id: req.body.offerId },
-      attributes: ["text", "status"],
-      include: [
-        {
-          model: User,
-          required: false,
-          attributes: ["email", "displayName"],
-        },
-      ],
-    });
-    sendStatusOfferOnEmail(mailData);
+    const mailData = await contestQueries.getDataForMail(req.body.offerId);
+    // // console.log("-------------", mailDatas.User.email);
+    utils.sendStatusOfferOnEmail(mailData);
     res.status(201).send("Moderation status updated successfully.");
   } catch (err) {
     next(err);

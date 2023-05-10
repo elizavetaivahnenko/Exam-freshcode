@@ -1,6 +1,6 @@
 const { Conversation, Message, Catalog } = require("../models/mongoModels");
 const moment = require("moment");
-const db = require("../models");
+const { User } = require("../models");
 const userQueries = require("./queries/userQueries");
 const controller = require("../socketInit");
 const _ = require("lodash");
@@ -119,6 +119,7 @@ module.exports.getChat = async (req, res, next) => {
 };
 
 module.exports.getPreview = async (req, res, next) => {
+  console.log("----------------------------------");
   try {
     const conversations = await Message.aggregate([
       {
@@ -162,7 +163,7 @@ module.exports.getPreview = async (req, res, next) => {
         )
       );
     });
-    const senders = await db.Users.findAll({
+    const senders = await User.findAll({
       where: {
         id: interlocutors,
       },
