@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Message.init(
     {
+      //conversation.... !check + models+migrations check with mongo
       conversationId: { type: DataTypes.INTEGER, allowNull: false },
       sender: { type: DataTypes.INTEGER, allowNull: false },
       body: { type: DataTypes.TEXT, allowNull: false },
