@@ -2,14 +2,16 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class CatalogToConversation extends Model {
-    static associate(models) {
-      CatalogToConversation.belongsToMany(models.User, {
-        foreignKey: { field: "id" },
-      });
-    }
+    static associate() {}
   }
   CatalogToConversation.init(
     {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
       catalogId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -17,16 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       conversationId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        defaultValue: sequelize.literal("NOW()"),
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE,
-        defaultValue: sequelize.literal("NOW()"),
       },
     },
     {

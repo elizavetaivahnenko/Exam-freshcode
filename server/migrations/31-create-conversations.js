@@ -16,7 +16,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       participant_2: {
         type: Sequelize.INTEGER,
@@ -26,7 +26,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       blackList_1: {
         type: Sequelize.BOOLEAN,

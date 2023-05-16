@@ -8,8 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      ///??????????????????????
-      conversationId: {
+      conversation: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -17,7 +16,7 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       sender: {
         type: Sequelize.INTEGER,
@@ -27,10 +26,11 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       body: {
         type: Sequelize.TEXT,
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,

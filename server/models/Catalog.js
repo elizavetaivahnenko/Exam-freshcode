@@ -2,12 +2,12 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Catalog extends Model {
-    static associate(models) {
-      Catalog.belongsTo(models.User, {
+    static associate(Conversation, User) {
+      Catalog.belongsTo(User, {
         foreignKey: "userId",
         targetKey: "id",
       });
-      Catalog.belongsToMany(models.Conversation, {
+      Catalog.belongsToMany(Conversation, {
         through: "CatalogToConversation",
         foreignKey: "catalogId",
         targetKey: "id",
@@ -16,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Catalog.init(
     {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,

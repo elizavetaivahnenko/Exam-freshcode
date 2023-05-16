@@ -2,12 +2,12 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
-    static associate(models) {
-      Message.belongsTo(models.Conversation, {
-        foreignKey: "conversationId",
+    static associate(Conversation, User) {
+      Message.belongsTo(Conversation, {
+        foreignKey: "conversation",
         targetKey: "id",
       });
-      Message.belongsTo(models.User, {
+      Message.belongsTo(User, {
         foreignKey: "sender",
         targetKey: "id",
       });
@@ -15,10 +15,24 @@ module.exports = (sequelize, DataTypes) => {
   }
   Message.init(
     {
-      //conversation.... !check + models+migrations check with mongo
-      conversationId: { type: DataTypes.INTEGER, allowNull: false },
-      sender: { type: DataTypes.INTEGER, allowNull: false },
-      body: { type: DataTypes.TEXT, allowNull: false },
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
+      conversation: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      sender: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      body: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
