@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
-    static associate(Conversation, User) {
+    static associate({ Conversation, User }) {
       Message.belongsTo(Conversation, {
         foreignKey: "conversation",
         targetKey: "id",
@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Message",
+      tableName: "Messages",
     }
   );
   return Message;

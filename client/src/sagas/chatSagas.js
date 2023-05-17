@@ -1,8 +1,8 @@
-import { put, select } from 'redux-saga/effects';
-import remove from 'lodash/remove';
-import isEqual from 'lodash/isEqual';
-import ACTION from '../actions/actionTypes';
-import * as restController from '../api/rest/restController';
+import { put, select } from "redux-saga/effects";
+import remove from "lodash/remove";
+import isEqual from "lodash/isEqual";
+import ACTION from "../actions/actionTypes";
+import * as restController from "../api/rest/restController";
 
 export function* previewSaga() {
   try {
@@ -61,9 +61,13 @@ export function* changeChatFavorite(action) {
     const { data } = yield restController.changeChatFavorite(action.data);
     const { messagesPreview } = yield select((state) => state.chatStore);
     messagesPreview.forEach((preview) => {
-      if (isEqual(preview.participants, data.participants)) preview.favoriteList = data.favoriteList;
+      if (isEqual(preview.participants, data.participants))
+        preview.favoriteList = data.favoriteList;
     });
-    yield put({ type: ACTION.CHANGE_CHAT_FAVORITE, data: { changedPreview: data, messagesPreview } });
+    yield put({
+      type: ACTION.CHANGE_CHAT_FAVORITE,
+      data: { changedPreview: data, messagesPreview },
+    });
   } catch (err) {
     yield put({ type: ACTION.SET_CHAT_FAVORITE_ERROR, error: err.response });
   }
@@ -74,9 +78,13 @@ export function* changeChatBlock(action) {
     const { data } = yield restController.changeChatBlock(action.data);
     const { messagesPreview } = yield select((state) => state.chatStore);
     messagesPreview.forEach((preview) => {
-      if (isEqual(preview.participants, data.participants)) preview.blackList = data.blackList;
+      if (isEqual(preview.participants, data.participants))
+        preview.blackList = data.blackList;
     });
-    yield put({ type: ACTION.CHANGE_CHAT_BLOCK, data: { messagesPreview, chatData: data } });
+    yield put({
+      type: ACTION.CHANGE_CHAT_BLOCK,
+      data: { messagesPreview, chatData: data },
+    });
   } catch (err) {
     yield put({ type: ACTION.SET_CHAT_BLOCK_ERROR, error: err.response });
   }
@@ -120,7 +128,10 @@ export function* deleteCatalog(action) {
   try {
     yield restController.deleteCatalog(action.data);
     const { catalogList } = yield select((state) => state.chatStore);
-    const newCatalogList = remove(catalogList, (catalog) => action.data.catalogId !== catalog._id);
+    const newCatalogList = remove(
+      catalogList,
+      (catalog) => action.data.catalogId !== catalog._id
+    );
     yield put({ type: ACTION.DELETE_CATALOG_SUCCESS, data: newCatalogList });
   } catch (err) {
     yield put({ type: ACTION.DELETE_CATALOG_ERROR, error: err.response });
@@ -137,9 +148,15 @@ export function* removeChatFromCatalogSaga(action) {
         break;
       }
     }
-    yield put({ type: ACTION.REMOVE_CHAT_FROM_CATALOG_SUCCESS, data: { catalogList, currentCatalog: data } });
+    yield put({
+      type: ACTION.REMOVE_CHAT_FROM_CATALOG_SUCCESS,
+      data: { catalogList, currentCatalog: data },
+    });
   } catch (err) {
-    yield put({ type: ACTION.REMOVE_CHAT_FROM_CATALOG_ERROR, error: err.response });
+    yield put({
+      type: ACTION.REMOVE_CHAT_FROM_CATALOG_ERROR,
+      error: err.response,
+    });
   }
 }
 
@@ -153,7 +170,10 @@ export function* changeCatalogName(action) {
         break;
       }
     }
-    yield put({ type: ACTION.CHANGE_CATALOG_NAME_SUCCESS, data: { catalogList, currentCatalog: data } });
+    yield put({
+      type: ACTION.CHANGE_CATALOG_NAME_SUCCESS,
+      data: { catalogList, currentCatalog: data },
+    });
   } catch (err) {
     yield put({ type: ACTION.CHANGE_CATALOG_NAME_ERROR, error: err.response });
   }

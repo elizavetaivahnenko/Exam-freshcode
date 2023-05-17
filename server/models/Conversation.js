@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Conversation extends Model {
-    static associate(Message, User, Catalog) {
+    static associate({ Message, User, Catalog }) {
       Conversation.hasMany(Message, {
         foreignKey: "conversation",
         targetKey: "id",
@@ -74,6 +74,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Conversation",
+      tableName: "Conversations",
     }
   );
   return Conversation;

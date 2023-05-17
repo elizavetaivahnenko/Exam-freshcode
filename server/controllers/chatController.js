@@ -1,5 +1,4 @@
 const { Conversation, Message, Catalog } = require("../models/mongoModels");
-const moment = require("moment");
 const { User } = require("../models");
 const userQueries = require("./queries/userQueries");
 const controller = require("../socketInit");
@@ -119,7 +118,6 @@ module.exports.getChat = async (req, res, next) => {
 };
 
 module.exports.getPreview = async (req, res, next) => {
-  console.log("----------------------------------");
   try {
     const conversations = await Message.aggregate([
       {
@@ -208,8 +206,10 @@ module.exports.blackList = async (req, res, next) => {
 };
 
 module.exports.favoriteChat = async (req, res, next) => {
+  console.log(req.body);
   const predicate =
     "favoriteList." + req.body.participants.indexOf(req.tokenData.userId);
+  console.log(predicate);
   try {
     const chat = await Conversation.findOneAndUpdate(
       { participants: req.body.participants },

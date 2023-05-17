@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "CatalogToConversation",
+      tableName: "CatalogToConversations",
+      timestamps: false,
     }
   );
   return CatalogToConversation;

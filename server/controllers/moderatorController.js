@@ -32,25 +32,6 @@ module.exports.getModeratorOffers = async (req, res, next) => {
   }
 };
 
-// module.exports.newModerationStatusOffer = async (req, res, next) => {
-//   try {
-//     let mailData = await Offer.findOne({
-//       where: { id: req.body.offerId },
-//       attributes: ["moderationStatus", "userId"],
-//       include: [
-//         {
-//           model: User,
-//           required: false,
-//           attributes: ["email", "firstName"],
-//         },
-//       ],
-//     });
-//     res.status(200).send(mailData);
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
 module.exports.newModerationStatusOffer = async (req, res, next) => {
   try {
     const [rowsUpdated] = await Offer.update(
@@ -67,7 +48,6 @@ module.exports.newModerationStatusOffer = async (req, res, next) => {
       throw error;
     }
     const mailData = await contestQueries.getDataForMail(req.body.offerId);
-    // // console.log("-------------", mailDatas.User.email);
     utils.sendStatusOfferOnEmail(mailData);
     res.status(201).send("Moderation status updated successfully.");
   } catch (err) {

@@ -13,7 +13,6 @@ const userQueries = require("./queries/userQueries");
 const controller = require("../socketInit");
 const UtilFunctions = require("../utils/functions");
 const CONSTANTS = require("../constants");
-const { includes } = require("lodash");
 
 module.exports.dataForContest = async (req, res, next) => {
   const response = {};
@@ -21,7 +20,6 @@ module.exports.dataForContest = async (req, res, next) => {
     const {
       body: { characteristic1, characteristic2 },
     } = req;
-    console.log(req.body, characteristic1, characteristic2);
     const types = [characteristic1, characteristic2, "industry"].filter(
       Boolean
     );
@@ -44,7 +42,6 @@ module.exports.dataForContest = async (req, res, next) => {
     });
     res.send(response);
   } catch (err) {
-    console.log(err);
     next(new ServerError("cannot get contest preferences"));
   }
 };
