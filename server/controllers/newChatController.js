@@ -1,6 +1,15 @@
-const { Conversation, Message, Catalog, User } = require("../models");
+const {
+  Conversation,
+  Message,
+  Catalog,
+  User,
+  CatalogToConversation,
+  sequelize,
+} = require("../models");
 const userQueries = require("./queries/userQueries");
 const controller = require("../socketInit");
+const chatQueries = require("./queries/chatQueries");
+const RightsError = require("../errors/RightsError");
 
 module.exports.getChat = async (req, res, next) => {
   const participants = [req.tokenData.userId, req.body.interlocutorId];
@@ -47,6 +56,7 @@ module.exports.getChat = async (req, res, next) => {
   }
 };
 
+//isChatBelongUser
 module.exports.favoriteChat = async (req, res, next) => {
   const predicate =
     "favoriteList_" + (req.body.participants.indexOf(req.tokenData.userId) + 1);
@@ -67,23 +77,13 @@ module.exports.favoriteChat = async (req, res, next) => {
         plain: true,
       }
     );
-    res.send(chat);
+    if (updateColumn === 1) {
+      res.send(chat);
+    } else {
+      throw new RightsError();
+    }
   } catch (err) {
     res.send(err);
-  }
-};
-
-module.exports.deleteCatalog = async (req, res, next) => {
-  try {
-    await Catalog.destroy({
-      where: {
-        id: req.body.catalogId,
-        userId: req.tokenData.userId,
-      },
-    });
-    res.end();
-  } catch (err) {
-    next(err);
   }
 };
 
@@ -91,30 +91,16 @@ module.exports.deleteCatalog = async (req, res, next) => {
 
 module.exports.getCatalogs = async (req, res, next) => {
   try {
-    const catalogs = await Catalog.findAll({
-      where: {
-        userId: req.tokenData.userId,
-      },
-      attributes: ["id", "catalogName"],
-      include: [
-        {
-          model: Conversation,
-          attributes: ["id"],
-          through: { attributes: [] },
-        },
-      ],
+    const catalogs = await chatQueries.getCatalogsQuery({
+      userId: req.tokenData.userId,
     });
-    const modifiedCatalogs = catalogs.map((catalog) => ({
-      id: catalog.id,
-      catalogName: catalog.catalogName,
-      chats: catalog.Conversations.map((conversation) => conversation.id),
-    }));
-    res.send(modifiedCatalogs);
+    res.send(catalogs);
   } catch (err) {
     next(err);
   }
 };
 
+//isChatBelong
 module.exports.blackList = async (req, res, next) => {
   const predicate =
     "blackList_" + (req.body.participants.indexOf(req.tokenData.userId) + 1);
@@ -135,12 +121,126 @@ module.exports.blackList = async (req, res, next) => {
         plain: true,
       }
     );
-    res.send(chat);
-    const interlocutorId = req.body.participants.filter(
-      (participant) => participant !== req.tokenData.userId
-    )[0];
-    controller.getChatController().emitChangeBlockStatus(interlocutorId, chat);
+    if (updateColumn === 1) {
+      res.send(chat);
+      const interlocutorId = req.body.participants.filter(
+        (participant) => participant !== req.tokenData.userId
+      )[0];
+      controller
+        .getChatController()
+        .emitChangeBlockStatus(interlocutorId, chat);
+    } else {
+      throw new RightsError();
+    }
   } catch (err) {
     res.send(err);
+  }
+};
+
+//2 middleware
+
+module.exports.addNewChatToCatalog = async (req, res, next) => {
+  try {
+    await CatalogToConversation.create({
+      catalogId: req.body.catalogId,
+      conversationId: req.body.chatId,
+    });
+    const catalog = await chatQueries.getCatalog({
+      id: req.body.catalogId,
+      userId: req.tokenData.userId,
+    });
+    res.send(catalog);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.updateNameCatalog = async (req, res, next) => {
+  try {
+    const [updateColumn] = await Catalog.update(
+      { catalogName: req.body.catalogName },
+      {
+        where: {
+          id: req.body.catalogId,
+          userId: req.tokenData.userId,
+        },
+      }
+    );
+    if (updateColumn === 1) {
+      const catalog = await chatQueries.getCatalog({
+        id: req.body.catalogId,
+        userId: req.tokenData.userId,
+      });
+      res.send(catalog);
+    } else {
+      throw new RightsError();
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+//isChatBelongsUser
+module.exports.createCatalog = async (req, res, next) => {
+  try {
+    const newCatalog = await Catalog.create(
+      {
+        userId: req.tokenData.userId,
+        catalogName: req.body.catalogName,
+      },
+      { returning: ["id"] }
+    );
+    await CatalogToConversation.create({
+      conversationId: req.body.chatId,
+      catalogId: newCatalog.id,
+    });
+    const catalog = await chatQueries.getCatalog({
+      id: newCatalog.id,
+      userId: req.tokenData.userId,
+    });
+    res.send(catalog);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.deleteCatalog = async (req, res, next) => {
+  const transaction = await sequelize.transaction();
+  try {
+    await CatalogToConversation.destroy({
+      where: { catalogId: req.body.catalogId },
+      transaction,
+    });
+    await Catalog.destroy({
+      where: {
+        id: req.body.catalogId,
+        userId: req.tokenData.userId,
+      },
+      transaction,
+    });
+    await transaction.commit();
+    res.end();
+  } catch (err) {
+    await transaction.rollback();
+    next(err);
+  }
+};
+
+//isChatBelongsToUser
+module.exports.removeChatFromCatalog = async (req, res, next) => {
+  try {
+    await CatalogToConversation.destroy({
+      where: {
+        catalogId: req.body.catalogId,
+        conversationId: req.body.chatId,
+      },
+    });
+    const catalog = await chatQueries.getCatalog({
+      id: req.body.catalogId,
+      userId: req.tokenData.userId,
+    });
+    res.next(catalog);
+  } catch (err) {
+    next(err);
   }
 };
