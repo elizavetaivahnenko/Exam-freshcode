@@ -118,6 +118,7 @@ module.exports.getChat = async (req, res, next) => {
 };
 
 module.exports.getPreview = async (req, res, next) => {
+  console.log(req.body);
   try {
     const conversations = await Message.aggregate([
       {

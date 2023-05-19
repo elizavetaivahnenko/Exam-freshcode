@@ -4,10 +4,6 @@ const chatController = require("../controllers/newChatController");
 
 const testRouter = Router();
 
-testRouter.post(
-  "/test",
-  checkToken.checkToken,
-  chatController.addNewChatToCatalog
-);
+testRouter.post("/test", checkToken.checkToken, chatController.getPreview);
 
 module.exports = testRouter;

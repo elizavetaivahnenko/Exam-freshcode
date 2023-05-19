@@ -5,6 +5,7 @@ const {
   User,
   CatalogToConversation,
   sequelize,
+  Sequelize,
 } = require("../models");
 const userQueries = require("./queries/userQueries");
 const controller = require("../socketInit");
@@ -240,6 +241,83 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
       userId: req.tokenData.userId,
     });
     res.next(catalog);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.getPreview = async (req, res, next) => {
+  try {
+    const conversations = await Message.findAll({
+      attributes: ["id", "sender", ["body", "text"], "createdAt"],
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: Conversation,
+          where: {
+            [Sequelize.Op.or]: [
+              { participant_1: req.tokenData.userId },
+              { participant_2: req.tokenData.userId },
+            ],
+          },
+          attributes: [
+            "participant_1",
+            "participant_2",
+            "blackList_1",
+            "blackList_2",
+            "favoriteList_1",
+            "favoriteList_2",
+          ],
+        },
+      ],
+    });
+
+    const modifyConversations = conversations.map((conversation) => {
+      return {
+        id: conversation.dataValues.id,
+        sender: conversation.dataValues.sender,
+        text: conversation.dataValues.text,
+        createdAt: conversation.dataValues.createdAt,
+        participants: [
+          conversation.Conversation.dataValues.participant_1,
+          conversation.Conversation.dataValues.participant_2,
+        ],
+        blackList: [
+          conversation.Conversation.dataValues.blackList_1,
+          conversation.Conversation.dataValues.blackList_2,
+        ],
+        favoriteList: [
+          conversation.Conversation.dataValues.favoriteList_1,
+          conversation.Conversation.dataValues.favoriteList_2,
+        ],
+      };
+    });
+    const interlocutors = modifyConversations.map((conversation) =>
+      conversation.participants.find(
+        (participant) => participant !== req.tokenData.userId
+      )
+    );
+    const sender = await User.findAll({
+      where: {
+        id: interlocutors,
+      },
+      attributes: ["id", "firstName", "lastName", "displayName", "avatar"],
+    });
+    modifyConversations.forEach((conversation) => {
+      const interlocutor = sender.find((detail) =>
+        conversation.participants.includes(detail.id)
+      );
+      if (interlocutor) {
+        conversation.interlocutor = {
+          id: interlocutor.id,
+          firstName: interlocutor.firstName,
+          lastName: interlocutor.lastName,
+          displayName: interlocutor.displayName,
+          avatar: interlocutor.avatar,
+        };
+      }
+    });
+    res.send(modifyConversations);
   } catch (err) {
     next(err);
   }
