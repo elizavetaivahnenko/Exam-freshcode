@@ -246,79 +246,122 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
   }
 };
 
+//instead of interlocutor queries return User... pay attention on front
 module.exports.getPreview = async (req, res, next) => {
   try {
-    const conversations = await Message.findAll({
-      attributes: ["id", "sender", ["body", "text"], "createdAt"],
-      order: [["createdAt", "DESC"]],
+    const conversations = await Conversation.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { participant_1: req.tokenData.userId },
+          { participant_2: req.tokenData.userId },
+        ],
+      },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
       include: [
         {
-          model: Conversation,
+          model: Message,
+          attributes: ["id", "sender", ["body", "text"], "createdAt"],
+          order: [["createdAt", "DESC"]],
+          limit: 1,
+        },
+        {
+          model: User,
+          attributes: ["id", "firstName", "lastName", "displayName", "avatar"],
           where: {
             [Sequelize.Op.or]: [
-              { participant_1: req.tokenData.userId },
-              { participant_2: req.tokenData.userId },
+              {
+                id: {
+                  [Sequelize.Op.eq]: Sequelize.col(
+                    "Conversation.participant_1"
+                  ),
+                },
+              },
+              {
+                id: {
+                  [Sequelize.Op.eq]: Sequelize.col(
+                    "Conversation.participant_2"
+                  ),
+                },
+              },
             ],
+            [Sequelize.Op.not]: { id: req.tokenData.userId },
           },
-          attributes: [
-            "participant_1",
-            "participant_2",
-            "blackList_1",
-            "blackList_2",
-            "favoriteList_1",
-            "favoriteList_2",
-          ],
         },
       ],
     });
-
-    const modifyConversations = conversations.map((conversation) => {
-      return {
-        id: conversation.dataValues.id,
-        sender: conversation.dataValues.sender,
-        text: conversation.dataValues.text,
-        createdAt: conversation.dataValues.createdAt,
-        participants: [
-          conversation.Conversation.dataValues.participant_1,
-          conversation.Conversation.dataValues.participant_2,
-        ],
-        blackList: [
-          conversation.Conversation.dataValues.blackList_1,
-          conversation.Conversation.dataValues.blackList_2,
-        ],
-        favoriteList: [
-          conversation.Conversation.dataValues.favoriteList_1,
-          conversation.Conversation.dataValues.favoriteList_2,
-        ],
-      };
-    });
-    const interlocutors = modifyConversations.map((conversation) =>
-      conversation.participants.find(
-        (participant) => participant !== req.tokenData.userId
-      )
-    );
-    const sender = await User.findAll({
-      where: {
-        id: interlocutors,
-      },
-      attributes: ["id", "firstName", "lastName", "displayName", "avatar"],
-    });
-    modifyConversations.forEach((conversation) => {
-      const interlocutor = sender.find((detail) =>
-        conversation.participants.includes(detail.id)
-      );
-      if (interlocutor) {
-        conversation.interlocutor = {
-          id: interlocutor.id,
-          firstName: interlocutor.firstName,
-          lastName: interlocutor.lastName,
-          displayName: interlocutor.displayName,
-          avatar: interlocutor.avatar,
-        };
-      }
-    });
-    res.send(modifyConversations);
+    res.send(conversations);
   } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.addMessage = async (req, res, next) => {
+  const transaction = await sequelize.transaction();
+  const participants = [req.tokenData.userId, req.body.recipient];
+  participants.sort(
+    (participant1, participant2) => participant1 - participant2
+  );
+  const [user1, user2] = participants;
+  try {
+    const [newConversation] = await Conversation.findOrCreate({
+      where: {
+        participant_1: user1,
+        participant_2: user2,
+      },
+      defaults: {
+        blackList_1: false,
+        blackList_2: false,
+        favoriteList_1: false,
+        favoriteList_2: false,
+      },
+      transaction,
+    });
+    const message = await Message.create(
+      {
+        sender: req.tokenData.userId,
+        body: req.body.messageBody,
+        conversation: newConversation.id,
+      },
+      { transaction }
+    );
+    await transaction.commit();
+    message.dataValues.participant_1 = user1;
+    message.dataValues.participant_2 = user2;
+    const [interlocutorId] = participants.filter(
+      (participant) => participant !== req.tokenData.userId
+    );
+    const preview = {
+      id: newConversation.id,
+      sender: req.tokenData.userId,
+      text: req.body.messageBody,
+      createAt: message.createdAt,
+      participant_1: user1,
+      participant_2: user2,
+      blackList_1: newConversation.blackList_1,
+      blackList_2: newConversation.blackList_2,
+      favoriteList_1: newConversation.favoriteList_1,
+      favoriteList_2: newConversation.favoriteList_2,
+    };
+    controller.getChatController().emitNewMessage(interlocutorId, {
+      message,
+      preview: {
+        ...preview,
+        interlocutor: {
+          id: req.tokenData.userId,
+          firstName: req.tokenData.firstName,
+          lastName: req.tokenData.lastName,
+          displayName: req.tokenData.displayName,
+          avatar: req.tokenData.avatar,
+          email: req.tokenData.email,
+        },
+      },
+    });
+    res.send({
+      message,
+      preview: Object.assign(preview, { interlocutor: req.body.interlocutor }),
+    });
+  } catch (err) {
+    await transaction.rollback();
     next(err);
   }
 };
