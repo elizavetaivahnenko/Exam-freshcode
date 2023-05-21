@@ -1,9 +1,79 @@
 const { Router } = require("express");
 const checkToken = require("../middlewares/checkToken");
 const chatController = require("../controllers/newChatController");
+const chatMiddleware = require("../middlewares/chatMiddlewares");
 
-const testRouter = Router();
+const chatRouter2 = Router();
 
-testRouter.post("/test", checkToken.checkToken, chatController.getPreview);
+// chatRouter2.post("/test", checkToken.checkToken, chatController.getPreview);
 
-module.exports = testRouter;
+chatRouter2.post(
+  "/newMessage",
+  checkToken.checkToken,
+  chatController.addMessage
+);
+
+chatRouter2.post("/getChat", checkToken.checkToken, chatController.getChat);
+
+chatRouter2.post(
+  "/getPreview",
+  checkToken.checkToken,
+  chatController.getPreview
+);
+
+//don't work with middleware and checking with (updateColumn)
+chatRouter2.post(
+  "/blackList",
+  checkToken.checkToken,
+  //   chatMiddleware.isChatBelongUser,
+  chatController.blackList
+);
+//don't work
+chatRouter2.post(
+  "/favorite",
+  checkToken.checkToken,
+  //   chatMiddleware.isChatBelongUser,
+  chatController.favoriteChat
+);
+
+chatRouter2.post(
+  "/createCatalog",
+  checkToken.checkToken,
+  chatMiddleware.isChatBelongUser,
+  chatController.createCatalog
+);
+
+chatRouter2.post(
+  "/updateNameCatalog",
+  checkToken.checkToken,
+  chatController.updateNameCatalog
+);
+
+chatRouter2.post(
+  "/addNewChatToCatalog",
+  checkToken.checkToken,
+  chatMiddleware.isChatBelongUser,
+  chatMiddleware.isCatalogBelongUser,
+  chatController.addNewChatToCatalog
+);
+
+chatRouter2.post(
+  "/removeChatFromCatalog",
+  checkToken.checkToken,
+  chatMiddleware.isChatBelongUser,
+  chatController.removeChatFromCatalog
+);
+
+chatRouter2.post(
+  "/deleteCatalog",
+  checkToken.checkToken,
+  chatController.deleteCatalog
+);
+
+chatRouter2.post(
+  "/getCatalogs",
+  checkToken.checkToken,
+  chatController.getCatalogs
+);
+
+module.exports = chatRouter2;

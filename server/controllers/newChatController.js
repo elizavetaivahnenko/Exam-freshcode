@@ -78,11 +78,11 @@ module.exports.favoriteChat = async (req, res, next) => {
         plain: true,
       }
     );
-    if (updateColumn === 1) {
-      res.send(chat);
-    } else {
-      throw new RightsError();
-    }
+    // if (updateColumn === 1) {
+    res.send(chat);
+    // } else {
+    //   throw new RightsError();
+    // }
   } catch (err) {
     res.send(err);
   }
@@ -92,16 +92,32 @@ module.exports.favoriteChat = async (req, res, next) => {
 
 module.exports.getCatalogs = async (req, res, next) => {
   try {
-    const catalogs = await chatQueries.getCatalogsQuery({
-      userId: req.tokenData.userId,
+    const catalogs = await Catalog.findAll({
+      where: {
+        userId: req.tokenData.userId,
+      },
+      attributes: ["id", "catalogName"],
+      include: [
+        {
+          model: Conversation,
+          attributes: ["id"],
+          through: { attributes: [] },
+        },
+      ],
     });
-    res.send(catalogs);
+    const modifiedCatalogs = catalogs.map((catalog) => ({
+      id: catalog.id,
+      catalogName: catalog.catalogName,
+      chats: catalog.Conversations.map((conversation) => conversation.id),
+    }));
+    res.send(modifiedCatalogs);
   } catch (err) {
     next(err);
   }
 };
 
 //isChatBelong
+//don't work with middleware and checking with (updateColumn)
 module.exports.blackList = async (req, res, next) => {
   const predicate =
     "blackList_" + (req.body.participants.indexOf(req.tokenData.userId) + 1);
@@ -240,13 +256,12 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
       id: req.body.catalogId,
       userId: req.tokenData.userId,
     });
-    res.next(catalog);
+    res.send(catalog);
   } catch (err) {
     next(err);
   }
 };
 
-//instead of interlocutor queries return User... pay attention on front
 module.exports.getPreview = async (req, res, next) => {
   try {
     const conversations = await Conversation.findAll({
@@ -256,7 +271,14 @@ module.exports.getPreview = async (req, res, next) => {
           { participant_2: req.tokenData.userId },
         ],
       },
-      attributes: { exclude: ["createdAt", "updatedAt"] },
+      attributes: [
+        "favoriteList_1",
+        "favoriteList_2",
+        "blackList_1",
+        "blackList_2",
+        "participant_1",
+        "participant_2",
+      ],
       include: [
         {
           model: Message,
@@ -289,7 +311,23 @@ module.exports.getPreview = async (req, res, next) => {
         },
       ],
     });
-    res.send(conversations);
+    const modifiedConversations = conversations.map((conversation) => {
+      const message = conversation?.Messages?.[0]?.dataValues || {};
+      return {
+        id: message.id,
+        sender: message.sender,
+        text: message.text,
+        createAt: message.createdAt,
+        participant_1: conversation.participant_1,
+        participant_2: conversation.participant_2,
+        blackList_1: conversation.blackList_1,
+        blackList_2: conversation.blackList_2,
+        favoriteList_1: conversation.favoriteList_1,
+        favoriteList_2: conversation.favoriteList_2,
+        interlocutor: conversation.User,
+      };
+    });
+    res.send(modifiedConversations);
   } catch (err) {
     next(err);
   }
