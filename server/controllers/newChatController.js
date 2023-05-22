@@ -75,14 +75,13 @@ module.exports.favoriteChat = async (req, res, next) => {
           participant_2: participants[1],
         },
         returning: true,
-        plain: true,
       }
     );
-    // if (updateColumn === 1) {
-    res.send(chat);
-    // } else {
-    //   throw new RightsError();
-    // }
+    if (updateColumn === 1) {
+      res.send(chat);
+    } else {
+      throw new RightsError();
+    }
   } catch (err) {
     res.send(err);
   }
@@ -135,7 +134,6 @@ module.exports.blackList = async (req, res, next) => {
           participant_2: participants[1],
         },
         returning: true,
-        plain: true,
       }
     );
     if (updateColumn === 1) {

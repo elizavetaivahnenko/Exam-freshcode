@@ -42,3 +42,20 @@ module.exports.isChatBelongUser = async (req, res, next) => {
     next(new ServerError());
   }
 };
+
+module.exports.isChatBelongUserForFavoriteAndBlackList = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const result = req.body.participants.includes(req.tokenData.userId);
+    if (result) {
+      next();
+    } else {
+      throw new NotFound("This chat does not belong to this user");
+    }
+  } catch (e) {
+    next(new ServerError());
+  }
+};

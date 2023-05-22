@@ -21,18 +21,17 @@ chatRouter2.post(
   chatController.getPreview
 );
 
-//don't work with middleware and checking with (updateColumn)
 chatRouter2.post(
   "/blackList",
   checkToken.checkToken,
-  //   chatMiddleware.isChatBelongUser,
+  chatMiddleware.isChatBelongUserForFavoriteAndBlackList,
   chatController.blackList
 );
-//don't work
+
 chatRouter2.post(
   "/favorite",
   checkToken.checkToken,
-  //   chatMiddleware.isChatBelongUser,
+  chatMiddleware.isChatBelongUserForFavoriteAndBlackList,
   chatController.favoriteChat
 );
 
