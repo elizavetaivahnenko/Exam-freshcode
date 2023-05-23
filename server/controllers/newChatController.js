@@ -57,7 +57,6 @@ module.exports.getChat = async (req, res, next) => {
   }
 };
 
-//isChatBelongUser
 module.exports.favoriteChat = async (req, res, next) => {
   const predicate =
     "favoriteList_" + (req.body.participants.indexOf(req.tokenData.userId) + 1);
@@ -78,7 +77,11 @@ module.exports.favoriteChat = async (req, res, next) => {
       }
     );
     if (updateColumn === 1) {
-      res.send(chat);
+      const result = await chatQueries.getConversation({
+        participant_1: participants[0],
+        participant_2: participants[1],
+      });
+      res.send(result);
     } else {
       throw new RightsError();
     }
@@ -116,7 +119,7 @@ module.exports.getCatalogs = async (req, res, next) => {
 };
 
 //isChatBelong
-//don't work with middleware and checking with (updateColumn)
+
 module.exports.blackList = async (req, res, next) => {
   const predicate =
     "blackList_" + (req.body.participants.indexOf(req.tokenData.userId) + 1);
@@ -137,7 +140,11 @@ module.exports.blackList = async (req, res, next) => {
       }
     );
     if (updateColumn === 1) {
-      res.send(chat);
+      const result = await chatQueries.getConversation({
+        participant_1: participants[0],
+        participant_2: participants[1],
+      });
+      res.send(result);
       const interlocutorId = req.body.participants.filter(
         (participant) => participant !== req.tokenData.userId
       )[0];
@@ -316,12 +323,12 @@ module.exports.getPreview = async (req, res, next) => {
         sender: message.sender,
         text: message.text,
         createAt: message.createdAt,
-        participant_1: conversation.participant_1,
-        participant_2: conversation.participant_2,
-        blackList_1: conversation.blackList_1,
-        blackList_2: conversation.blackList_2,
-        favoriteList_1: conversation.favoriteList_1,
-        favoriteList_2: conversation.favoriteList_2,
+        participants: [conversation.participant_1, conversation.participant_2],
+        blackList: [conversation.blackList_1, conversation.blackList_2],
+        favoriteList: [
+          conversation.favoriteList_1,
+          conversation.favoriteList_2,
+        ],
         interlocutor: conversation.User,
       };
     });
@@ -352,7 +359,7 @@ module.exports.addMessage = async (req, res, next) => {
       },
       transaction,
     });
-    const message = await Message.create(
+    const getMessage = await Message.create(
       {
         sender: req.tokenData.userId,
         body: req.body.messageBody,
@@ -361,25 +368,34 @@ module.exports.addMessage = async (req, res, next) => {
       { transaction }
     );
     await transaction.commit();
-    message.dataValues.participant_1 = user1;
-    message.dataValues.participant_2 = user2;
+    getMessage.dataValues.participant_1 = user1;
+    getMessage.dataValues.participant_2 = user2;
     const [interlocutorId] = participants.filter(
       (participant) => participant !== req.tokenData.userId
     );
+    const message = {
+      createdAt: getMessage.createdAt,
+      updatedAt: getMessage.updatedAt,
+      id: getMessage.id,
+      sender: getMessage.sender,
+      body: getMessage.body,
+      conversation: getMessage.conversation,
+      participants: [getMessage.participant_1, getMessage.participant_2],
+    };
     const preview = {
       id: newConversation.id,
       sender: req.tokenData.userId,
       text: req.body.messageBody,
-      createAt: message.createdAt,
-      participant_1: user1,
-      participant_2: user2,
-      blackList_1: newConversation.blackList_1,
-      blackList_2: newConversation.blackList_2,
-      favoriteList_1: newConversation.favoriteList_1,
-      favoriteList_2: newConversation.favoriteList_2,
+      createAt: getMessage.createdAt,
+      participants: [user1, user2],
+      blackList: [newConversation.blackList_1, newConversation.blackList_2],
+      favoriteList: [
+        newConversation.favoriteList_1,
+        newConversation.favoriteList_2,
+      ],
     };
     controller.getChatController().emitNewMessage(interlocutorId, {
-      message,
+      getMessage,
       preview: {
         ...preview,
         interlocutor: {

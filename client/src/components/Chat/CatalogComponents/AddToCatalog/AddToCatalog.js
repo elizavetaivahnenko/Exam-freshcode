@@ -1,9 +1,9 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Formik, Form } from 'formik';
-import SelectInput from '../../../SelectInput/SelectInput';
-import { addChatToCatalog } from '../../../../actions/actionCreator';
-import styles from './AddToCatalog.module.sass';
+import React from "react";
+import { connect } from "react-redux";
+import { Formik, Form } from "formik";
+import SelectInput from "../../../SelectInput/SelectInput";
+import { addChatToCatalog } from "../../../../actions/actionCreator";
+import styles from "./AddToCatalog.module.sass";
 
 const AddToCatalog = (props) => {
   const getCatalogsNames = () => {
@@ -19,7 +19,7 @@ const AddToCatalog = (props) => {
     const { catalogList } = props;
     const valueArray = [];
     catalogList.forEach((catalog) => {
-      valueArray.push(catalog._id);
+      valueArray.push(catalog.id);
     });
     return valueArray;
   };
@@ -32,27 +32,28 @@ const AddToCatalog = (props) => {
   const selectArray = getCatalogsNames();
   return (
     <>
-      {selectArray.length !== 0
-        ? (
-          <Formik onSubmit={click} initialValues={{ catalogId: '' }}>
-            <Form className={styles.form}>
-              <SelectInput
-                name="catalogId"
-                header="name of catalog"
-                classes={{
-                  inputContainer: styles.selectInputContainer,
-                  inputHeader: styles.selectHeader,
-                  selectInput: styles.select,
-                }}
-                optionsArray={selectArray}
-                valueArray={getValueArray()}
-              />
-              <button type="submit">Add</button>
-            </Form>
-          </Formik>
-        )
-        : <div className={styles.notFound}>You have not created any directories.</div>}
-
+      {selectArray.length !== 0 ? (
+        <Formik onSubmit={click} initialValues={{ catalogId: "" }}>
+          <Form className={styles.form}>
+            <SelectInput
+              name="catalogId"
+              header="name of catalog"
+              classes={{
+                inputContainer: styles.selectInputContainer,
+                inputHeader: styles.selectHeader,
+                selectInput: styles.select,
+              }}
+              optionsArray={selectArray}
+              valueArray={getValueArray()}
+            />
+            <button type="submit">Add</button>
+          </Form>
+        </Formik>
+      ) : (
+        <div className={styles.notFound}>
+          You have not created any directories.
+        </div>
+      )}
     </>
   );
 };

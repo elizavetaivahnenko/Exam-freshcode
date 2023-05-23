@@ -5,8 +5,6 @@ const chatMiddleware = require("../middlewares/chatMiddlewares");
 
 const chatRouter2 = Router();
 
-// chatRouter2.post("/test", checkToken.checkToken, chatController.getPreview);
-
 chatRouter2.post(
   "/newMessage",
   checkToken.checkToken,
