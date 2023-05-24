@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const checkToken = require("../middlewares/checkToken");
-const chatController = require("../controllers/chatController");
+const chatController = require("../controllers/newChatController");
+const chatMiddleware = require("../middlewares/chatMiddlewares");
 
 const chatRouter = Router();
 
@@ -18,17 +19,24 @@ chatRouter.post(
   chatController.getPreview
 );
 
-chatRouter.post("/blackList", checkToken.checkToken, chatController.blackList);
+chatRouter.post(
+  "/blackList",
+  checkToken.checkToken,
+  chatMiddleware.isChatBelongUserForFavoriteAndBlackList,
+  chatController.blackList
+);
 
 chatRouter.post(
   "/favorite",
   checkToken.checkToken,
+  chatMiddleware.isChatBelongUserForFavoriteAndBlackList,
   chatController.favoriteChat
 );
 
 chatRouter.post(
   "/createCatalog",
   checkToken.checkToken,
+  chatMiddleware.isChatBelongUser,
   chatController.createCatalog
 );
 
@@ -41,12 +49,15 @@ chatRouter.post(
 chatRouter.post(
   "/addNewChatToCatalog",
   checkToken.checkToken,
+  chatMiddleware.isChatBelongUser,
+  chatMiddleware.isCatalogBelongUser,
   chatController.addNewChatToCatalog
 );
 
 chatRouter.post(
   "/removeChatFromCatalog",
   checkToken.checkToken,
+  chatMiddleware.isChatBelongUser,
   chatController.removeChatFromCatalog
 );
 

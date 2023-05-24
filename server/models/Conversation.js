@@ -8,10 +8,12 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "id",
       });
       Conversation.belongsTo(User, {
+        as: "User1",
         foreignKey: "participant_1",
         targetKey: "id",
       });
       Conversation.belongsTo(User, {
+        as: "User2",
         foreignKey: "participant_2",
         targetKey: "id",
       });

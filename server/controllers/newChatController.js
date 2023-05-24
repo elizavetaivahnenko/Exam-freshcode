@@ -90,8 +90,6 @@ module.exports.favoriteChat = async (req, res, next) => {
   }
 };
 
-//ожидается правка на клиенте
-
 module.exports.getCatalogs = async (req, res, next) => {
   try {
     const catalogs = await Catalog.findAll({
@@ -117,8 +115,6 @@ module.exports.getCatalogs = async (req, res, next) => {
     next(err);
   }
 };
-
-//isChatBelong
 
 module.exports.blackList = async (req, res, next) => {
   const predicate =
@@ -159,9 +155,8 @@ module.exports.blackList = async (req, res, next) => {
   }
 };
 
-//2 middleware
-
 module.exports.addNewChatToCatalog = async (req, res, next) => {
+  console.log("------", req.body);
   try {
     await CatalogToConversation.create({
       catalogId: req.body.catalogId,
@@ -202,7 +197,6 @@ module.exports.updateNameCatalog = async (req, res, next) => {
   }
 };
 
-//isChatBelongsUser
 module.exports.createCatalog = async (req, res, next) => {
   try {
     const newCatalog = await Catalog.create(
@@ -248,7 +242,6 @@ module.exports.deleteCatalog = async (req, res, next) => {
   }
 };
 
-//isChatBelongsToUser
 module.exports.removeChatFromCatalog = async (req, res, next) => {
   try {
     await CatalogToConversation.destroy({
@@ -268,73 +261,81 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
 };
 
 module.exports.getPreview = async (req, res, next) => {
+  const userAttributes = {
+    attributes: ["id", "firstName", "lastName", "displayName", "avatar"],
+  };
   try {
-    const conversations = await Conversation.findAll({
+    const lastMessages = await Message.findAll({
+      attributes: ["sender", ["body", "text"], "createdAt"],
       where: {
-        [Sequelize.Op.or]: [
-          { participant_1: req.tokenData.userId },
-          { participant_2: req.tokenData.userId },
-        ],
+        createdAt: {
+          [Sequelize.Op.in]: sequelize.literal(`
+            (SELECT MAX("Messages"."createdAt")
+            FROM "Messages"
+            JOIN "Conversations" ON "Messages"."conversation" = "Conversations"."id"
+            WHERE "Conversations"."participant_1" = ${req.tokenData.userId}
+            OR "Conversations"."participant_2" = ${req.tokenData.userId}
+            GROUP BY "Conversations"."id")
+          `),
+        },
       },
-      attributes: [
-        "favoriteList_1",
-        "favoriteList_2",
-        "blackList_1",
-        "blackList_2",
-        "participant_1",
-        "participant_2",
-      ],
+      order: [["createdAt", "DESC"]],
       include: [
         {
-          model: Message,
-          attributes: ["id", "sender", ["body", "text"], "createdAt"],
-          order: [["createdAt", "DESC"]],
-          limit: 1,
-        },
-        {
-          model: User,
-          attributes: ["id", "firstName", "lastName", "displayName", "avatar"],
-          where: {
-            [Sequelize.Op.or]: [
-              {
-                id: {
-                  [Sequelize.Op.eq]: Sequelize.col(
-                    "Conversation.participant_1"
-                  ),
-                },
-              },
-              {
-                id: {
-                  [Sequelize.Op.eq]: Sequelize.col(
-                    "Conversation.participant_2"
-                  ),
-                },
-              },
-            ],
-            [Sequelize.Op.not]: { id: req.tokenData.userId },
-          },
+          model: Conversation,
+          attributes: [
+            "id",
+            "participant_1",
+            "participant_2",
+            "favoriteList_1",
+            "favoriteList_2",
+            "blackList_1",
+            "blackList_2",
+          ],
+          include: [
+            {
+              model: User,
+              as: "User1",
+              ...userAttributes,
+            },
+            {
+              model: User,
+              as: "User2",
+              ...userAttributes,
+            },
+          ],
         },
       ],
+      raw: true,
+      nest: true,
     });
-    const modifiedConversations = conversations.map((conversation) => {
-      const message = conversation?.Messages?.[0]?.dataValues || {};
+    const getPreview = lastMessages.map(({ Conversation, ...other }) => {
+      const id = Conversation.id;
+      const participants = [
+        Conversation.participant_1,
+        Conversation.participant_2,
+      ];
+      const favoriteList = [
+        Conversation.favoriteList_1,
+        Conversation.favoriteList_2,
+      ];
+      const blackList = [Conversation.blackList_1, Conversation.blackList_2];
+      const interlocutor =
+        Conversation.User1.id === req.tokenData.userId
+          ? Conversation.User2
+          : Conversation.User1;
       return {
-        id: message.id,
-        sender: message.sender,
-        text: message.text,
-        createAt: message.createdAt,
-        participants: [conversation.participant_1, conversation.participant_2],
-        blackList: [conversation.blackList_1, conversation.blackList_2],
-        favoriteList: [
-          conversation.favoriteList_1,
-          conversation.favoriteList_2,
-        ],
-        interlocutor: conversation.User,
+        id,
+        ...other,
+        participants,
+        favoriteList,
+        blackList,
+        interlocutor,
       };
     });
-    res.send(modifiedConversations);
-  } catch (err) {
-    next(err);
+    res.status(200).send(getPreview);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -368,8 +369,6 @@ module.exports.addMessage = async (req, res, next) => {
       { transaction }
     );
     await transaction.commit();
-    getMessage.dataValues.participant_1 = user1;
-    getMessage.dataValues.participant_2 = user2;
     const [interlocutorId] = participants.filter(
       (participant) => participant !== req.tokenData.userId
     );
@@ -380,7 +379,7 @@ module.exports.addMessage = async (req, res, next) => {
       sender: getMessage.sender,
       body: getMessage.body,
       conversation: getMessage.conversation,
-      participants: [getMessage.participant_1, getMessage.participant_2],
+      participants: [user1, user2],
     };
     const preview = {
       id: newConversation.id,
@@ -395,7 +394,7 @@ module.exports.addMessage = async (req, res, next) => {
       ],
     };
     controller.getChatController().emitNewMessage(interlocutorId, {
-      getMessage,
+      message,
       preview: {
         ...preview,
         interlocutor: {

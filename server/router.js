@@ -19,7 +19,4 @@ router.use("/users", usersRouter);
 const moderatorRouter = require("./routers/moderatorRouter");
 router.use("/moderator", moderatorRouter);
 
-const testRouter = require("./routers/testRouter");
-router.use("/test", testRouter);
-
 module.exports = router;

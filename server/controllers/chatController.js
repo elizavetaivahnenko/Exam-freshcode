@@ -5,7 +5,6 @@ const controller = require("../socketInit");
 const _ = require("lodash");
 
 module.exports.addMessage = async (req, res, next) => {
-  console.log("---", req.body.recipient);
   const participants = [req.tokenData.userId, req.body.recipient];
   participants.sort(
     (participant1, participant2) => participant1 - participant2
