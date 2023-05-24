@@ -1,0 +1,75 @@
+.buttonGroupe__container
+	margin: 0 auto
+	padding: 15px
+	@media (max-width:576px)
+		max-width: 546px
+
+	@media (min-width:768px)
+		max-width: 738px
+
+	@media (min-width:992px)
+		max-width: 960px
+		margin-bottom: 0
+
+	@media (min-width:1200px)
+		max-width: 1200px
+
+	&-cards
+		display: flex
+		flex-direction: column
+		justify-content: space-between
+		@media (min-width:992px)
+			flex-direction: row
+
+		.card
+			cursor: pointer
+			border: 1px solid #e7eaf3
+			padding: 1rem
+			width: 100%
+			margin-bottom: 15px
+			>*
+				pointer-events: none
+
+			&:not(.active):hover
+				border: 1px solid rgba(199, 243, 243, 0.8)
+				box-shadow: 0 0 10px rgba(215, 238, 238, 0.8)
+
+			@media (min-width:992px)
+				flex: 1 1 auto
+				margin: 0px 15px 32px 15px
+
+			.body
+				display: flex
+				justify-content: flex-start
+				flex-direction: row
+				align-items: center
+				@media (min-width:768px)
+					align-items: center
+					flex-direction: column
+					text-align: center
+
+				&-btn
+					padding: 7px 15px
+					background-color: #77838f
+					color: #fff
+					margin-bottom: 1rem
+					border-radius: 10rem
+					font-size: 75%
+					font-weight: 500
+					line-height: 1
+					margin-right: 15px
+
+				.activePill
+					background-color: #2cb9b7
+
+				h5
+					color: #555C6B
+					font-size: 12px
+					font-weight: 400
+					margin-bottom: 0.25rem
+
+		.active
+			border-color: rgba(44, 185, 183, .5)
+			box-shadow: 0 0 5px rgba(44, 185, 183, .125)
+			border-width: 3px
+			border-radius: 4px

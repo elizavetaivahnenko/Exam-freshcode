@@ -1,0 +1,20 @@
+[
+    {
+      "id": 1,
+      "badget": "Yes",
+      "title": "The Domain should exactly match the name",
+      "value": "asname"
+    },
+    {
+      "id": 2,
+      "badget": "Yes",
+      "title": "But minor variations are allowed (Recommended)",
+      "value": "yes"
+    },
+    {
+      "id": 3,
+      "badget": "No",
+      "title": " I am only looking for a name, not a Domain",
+      "value": "no"
+    }
+]
