@@ -1,0 +1,53 @@
+@import '../../../pages/HowItWorkPage/base.scss';
+.heroSection{
+	padding-bottom: 32px;
+	@include flexrow;
+	flex-wrap: wrap;
+	margin: 0 -15px;
+	@media (min-width:992px) {
+		justify-content: space-between;	
+	}
+	&-body{
+		padding-right: 15px;
+		padding-left: 15px;
+		margin-bottom: 24px;
+		width: 100%;
+		@media (min-width:992px) {
+			flex: 0 0 58.333%;
+			max-width: 58.33333%;
+		}
+		.content{
+			margin-bottom: 24px;
+			.title{
+				margin-bottom: 8px;
+			}
+			.text{
+				margin-bottom: 16px;
+			}
+			&-btn{
+				margin-bottom: 64px;
+				@media (max-width:462px) {
+					width: 100%;
+				}
+				span{
+					margin-right: 12px;
+				}
+			}
+		}
+	}
+	&-img{
+		padding-right: 15px;
+		padding-left: 15px;
+		margin-bottom: 1.5rem;
+		display: none;
+		@media (min-width:992px) {
+			flex: 0 0 41.66667%;
+			max-width: 41.66667%;
+			display: block;
+		}
+		img{
+			width: 100%;
+		}
+
+	}
+}

@@ -1,0 +1,65 @@
+.statsContainer{
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -15px;
+	margin-left: -15px;
+	margin-bottom: 6rem;
+	@media (min-width: 992px){
+	justify-content: center;
+	}
+	.card{
+		position: relative;
+		width: 100%;
+		padding-right: 15px;
+		padding-left: 15px;
+	@media (min-width: 992px) {
+		margin-bottom: 0;
+	}
+	@media (min-width:768px) {
+		flex: 0 0 33.33333%;
+		max-width: 33.33333%;
+	}
+	&__container{
+		position: relative;
+		text-align: center;
+	}
+	@media (min-width: 992px) {
+		padding-right: 3rem;
+		padding-left: 3rem;
+	}
+	@media (min-width: 768px) {
+		padding-right: 1rem;
+		padding-left: 1rem;
+	}
+	.emblems{
+		max-width: 4.5rem;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 1rem;
+		img{
+			width: 100%;
+		}
+	}
+	p {
+		font-weight: 400;
+		font-size: 16px;
+		padding-right: 25px;
+		padding-left: 25px;
+		span {
+			color: #1e2022;
+			font-weight: 600;
+		}
+	}
+	@media (min-width: 768px) {
+		.mb ::after {
+				position: absolute;
+				right: -0.9375rem;
+				top: 50%;
+				height: 4rem;
+				border-left: 1px solid rgba(30, 32, 34, .2);
+				content: "";
+				margin-top: -2rem;
+				transform: rotate(15deg);
+			}
+
+	}}}

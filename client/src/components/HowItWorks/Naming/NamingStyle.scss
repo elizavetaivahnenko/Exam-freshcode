@@ -1,0 +1,155 @@
+.naming {
+	width: 100%;
+	padding: 0px 15px 0px 15px;
+	&__title {
+		text-align: center;
+		@media (min-width: 768px) {
+			margin-bottom: 4rem;
+		}
+
+		img {
+			max-width: 72px;
+			margin-bottom: 16px;
+		}
+
+		h2 {
+			color: rgb(30, 32, 34);
+			font-family: 'Poppins';
+			font-size: 32px;
+			font-weight: 400;
+			line-height: 1.5;
+
+			@media(max-width: 420px) {
+				font-size: 24.8px;
+				font-weight: 400;
+				line-height: 37.2px;
+				margin-block-end: 8px;
+			}
+
+		}
+	}
+
+	&__body {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+
+		@media (min-width: 992px) {
+			flex-direction: row-reverse;
+		}
+		&-img {
+			// position: relative;
+			width: 100%;
+			// padding: 0 15px;
+
+			@media (min-width: 992px) {
+				flex: 0 0 50%;
+				max-width: 50%;
+				// flex-wrap: nowrap;
+				div{
+					width: 100%;
+				img {
+					padding-right: 3rem;
+					}
+				}	
+			}
+		}
+		&-text {
+			flex: 3;
+			position: relative;
+			width: 100%;
+			padding: 0 15px;
+			margin-bottom: 3rem;
+			@media (max-width:576px) {
+				padding: 0 -15px;
+				margin: 0 -32px;
+			}
+			@media (min-width: 992px) {
+				margin-bottom: 0px;
+			}
+			ul {
+				margin-bottom: 24px;
+				.indicate {
+					position: relative;
+					padding: 1rem 0 1rem 2.5rem;
+					display: list-item;
+
+					&::before {
+						top: 0;
+						bottom: 0;
+						right: 0;
+						margin: auto auto auto 0;
+						position: absolute;
+						left: -0.25rem;
+						width: 2rem;
+						height: 0.0625rem;
+						border-top: 1px solid #e7eaf3;
+						content: "";
+					}
+
+					&::after {
+						top: 0;
+						bottom: 0;
+						right: 0;
+						position: absolute;
+						left: -0.3125rem;
+						width: 0.0625rem;
+						height: 100%;
+						border-right: 1px solid #e7eaf3;
+						content: "";
+					}
+
+					&:first-child::after {
+						height: 50%;
+						top: auto;
+
+					}
+
+					&:last-child::after {
+						height: 50%;
+						bottom: auto;
+					}
+
+					.media {
+						padding: 2rem;
+						align-items: center;
+						border: 1px solid #e7eaf3;
+						display: flex;
+						border-radius: 0.3125rem;
+
+						&__num {
+							margin-right: 16px;
+							min-width: 3rem;
+							display: flex;
+
+							span {
+								font-size: 56px;
+								font-weight: 500;
+								text-align: left;
+								line-height: 1.2;
+								color: #377dff;
+								font-family: 'Poppins';
+							}
+						}
+
+						&__content {
+							p {
+								color: #77838f;
+								line-height: 1.7;
+								font-size: 16px;
+								font-weight: 400;
+								text-align: left;
+								font-family: 'Poppins';
+							}
+
+						}
+
+					}
+				}
+
+			}
+		}
+
+	}
+
+}

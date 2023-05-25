@@ -1,0 +1,29 @@
+@mixin flexrow {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+@mixin adaptive {
+	@media (max-width:1024px){
+		max-width: 100%;
+	}
+	@media (max-width:576px) {
+		max-width: 546px;
+
+	}
+
+	@media (min-width:768px) {
+		max-width: 738px;
+	}
+
+	@media (min-width:992px) {
+		max-width: 960px;
+		margin-bottom: 0;
+
+	}
+
+	@media (min-width:1200px) {
+		max-width: 1200px;
+	}
+}

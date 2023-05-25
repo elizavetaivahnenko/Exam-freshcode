@@ -1,0 +1,111 @@
+@import './base';
+*,
+*::before,
+*::after {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	box-sizing: border-box;
+}
+body{
+	height: 100%;
+	font-family: "Poppins";
+}
+.main{
+	&__container{
+		margin: 0 auto;
+		margin-top: 60px;
+		padding: 32px 15px 0px 15px;
+		@include adaptive;
+	}
+	&__container-naming{
+		@include adaptive;
+		padding: 128px 15px;
+		margin: 0 auto;
+		// @media (min-width:576px) {
+		// 	padding-left: 15px;
+		// }
+	}
+	&__container-faq{
+		@include adaptive;
+		margin: 0 auto;
+		padding: 64px 15px 0px 15px;
+	}
+	&__container-stat {
+		@include adaptive;
+		margin: 0 auto;
+		padding: 64px 15px 0px 15px;
+	}
+}
+h1{
+	font-size: 2.5rem;
+	line-height: 1.5;
+	margin-bottom: 0.5rem;
+	margin-top: 0;
+	font-weight: 600;
+}
+h2{
+	font-weight: 400;
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+	line-height: 1.5;
+	margin-top: 0;
+}
+h3{
+	font-weight: 500;
+	font-size: 1.5rem;
+	line-height: 1.5;
+}
+p{
+	color: #77838f;
+	line-height: 1.7;
+	margin: 0 0 10px;
+}
+
+.mainButton {
+	cursor: pointer;
+	background-color: #377dff;
+	border-radius: 6.1875rem;
+	min-width: 9.6875rem;
+	font-weight: inherit;
+	font-size: inherit;
+	color: inherit;
+	font-family: inherit;
+	margin-bottom: 0;
+	color: #fff;
+	font-weight: 500;
+	border: 1px solid transparent;
+	padding: 0.75rem 1rem;
+	font-size: 1rem;
+	line-height: 1.5;
+}
+.mainButton:hover{
+	box-shadow: 0 4px 11px rgb(55 125 255 / 35%);
+	transform: translateY(-3px);
+	transition: all 0.2s ease-in-out;
+	transition-delay: .001s;
+}
+.pill{
+	color: #377dff;
+	background: rgba(55, 125, 255, .1);
+	border-color: transparent;
+	margin-bottom: 8px;
+	cursor: default;
+	font-size: 11px;
+	line-height: 16.5px;
+	font-weight: 400;
+	padding: 0.4375rem 0.9375rem;
+	border-radius: 6.1875rem;
+	display: inline-block;
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+li {
+	list-style: none;
+}
+hr{
+	border: 1px solid #e7eaf3;
+}
